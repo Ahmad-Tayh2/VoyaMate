@@ -1,0 +1,78 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Register</h1>
+    <form class="p-4 border rounded shadow-sm" [style]="{'background-color':'rgb(245, 255, 255)'}" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Email Input -->
+      <div class="form-group mb-3">
+        <label for="email">Email address</label>
+        <input type="email" formControlName="email" class="form-control" [style]="{'border-color': checkInputState('email') ? 'red':'rgb(142, 202, 230)'}" placeholder="Enter your email">
+        <div *ngIf="checkInputState('email')" class="text-danger">
+          Please enter a valid email address.
+        </div>
+      </div>
+  
+      <!-- Username Input -->
+      <div class="form-group mb-3">
+        <label for="username">Username</label>
+        <input type="text" formControlName="username" class="form-control" [style]="{'border-color': checkInputState('username') ? 'red':'rgb(142, 202, 230)'}" placeholder="Enter your username">
+        <div *ngIf="checkInputState('username')"  class="text-danger">
+          Username should be at least 6 characters length.
+        </div>
+      </div>
+  
+      <!-- Phone Number Input -->
+      <div class="form-group mb-3">
+        <label for="phone">Phone Number</label>
+        <div class="input-group">
+          <select formControlName="countryCode" class="form-select" style="max-width: 120px;">
+            <option *ngFor="let countryCode of countryCodes" value="{{countryCode.code}}">{{countryCode.code}} {{countryCode.country}}</option>
+          </select>
+          <input type="tel" formControlName="phone" class="form-control" [style]="{'border-color': checkInputState('phone') ? 'red':'rgb(142, 202, 230)'}" placeholder="Enter phone number">
+        </div>
+        <div *ngIf="checkInputState('phone')">
+          Phone number is required.
+        </div>
+      </div>
+  
+      <!-- Password Input -->
+      <div class="form-group mb-3">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" class="form-control" [style]="{'border-color': checkInputState('password') ? 'red':'rgb(142, 202, 230)'}" placeholder="Enter your password">
+        <div *ngIf="checkInputState('password')"  class="text-danger">
+          Password should be at least 8 characters length.
+        </div>
+      </div>
+  
+      <!-- Accept Terms and Conditions -->
+      <div class="form-group mb-3">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" formControlName="acceptTerms" id="acceptTerms">
+          <label class="form-check-label" for="acceptTerms">
+            I accept the <a href="#">terms and conditions</a>.
+          </label>
+        </div>
+        <div *ngIf="checkInputState('acceptTerms')" class="text-danger">
+          You must accept the terms and conditions.
+        </div>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button mat-raised-button type="submit" 
+          [style]="{
+            'width':'250px' ,
+            'background-color' :'rgb(33, 158, 188)',
+            'color':'white' }"
+          id="btnsub" class="btn btn-primary" [disabled]="registerForm.invalid">
+          Register
+        </button>
+      </div>
+  
+      <!-- Already Have an Account Link -->
+      <div class="text-center mt-3">
+        <p>Already have an account? <a href="/login">Login</a></p>
+      </div>
+  
+    </form>
+  </div>
+  

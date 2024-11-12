@@ -1,0 +1,23 @@
+/* app.component.css */
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+
+  .form-select.option{
+    margin-top: 100%;
+  }
+  .country-code {
+    width: 120px;
+  }
+  #btnsub{
+   background-color: azure;
+  }
+  

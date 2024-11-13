@@ -11,7 +11,7 @@ export class UserService {
     private repository: Repository<User>
  ){}
 
-    async addUser(addUserDTO: AddUserDTO):User {
+    addUser(addUserDTO: AddUserDTO):User {
 
         const newUser=this.repository.create({...addUserDTO,
             verifiedAt: null,

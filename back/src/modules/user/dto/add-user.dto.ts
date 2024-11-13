@@ -11,7 +11,7 @@ export class AddUserDTO {
 
     @IsString()
     @MinLength(8)
-    @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+    @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
         message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
       })
     password: string;

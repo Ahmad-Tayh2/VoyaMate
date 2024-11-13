@@ -4,12 +4,17 @@ import {User} from '../user/user.entity'
 import {UserService} from '../user/user.service'
 
 @Controller('user')
+
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post("/register")
-    registerUser(@Body() addUserDTO: AddUserDTO):User {
-        const user:User=this.userService.addUser(addUserDTO);
-        return user;
+    async registerUser(@Body() addUserDTO: AddUserDTO): Promise<User | Error> {
+        try {
+            const user = await this.userService.addUser(addUserDTO);
+            return user;
+        } catch (err) {
+            return err;
+        }
     }
 }

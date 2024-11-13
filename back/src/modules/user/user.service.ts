@@ -11,19 +11,13 @@ export class UserService {
     private repository: Repository<User>
  ){}
 
-    addUser(addUserDTO: AddUserDTO):User {
+    async addUser(addUserDTO: AddUserDTO):User {
 
-        const dto_2_user: User = {
-            id: 1,
-            username:addUserDTO.username,
-            email: addUserDTO.email,
-            password: addUserDTO.password,
-            phone:addUserDTO.phone,
-            verifiedAt:null,
+        const newUser=this.repository.create({...addUserDTO,
+            verifiedAt: null,
             createdAt: new Date(),
             updatedAt: new Date()
-        }
-        const newUser=this.repository.create(dto_2_user);
+        });
         this.repository.save(newUser);
         return newUser;
     }

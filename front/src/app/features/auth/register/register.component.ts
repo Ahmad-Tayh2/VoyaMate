@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit{
         .map((value)=> this.countryCodes.push(new CountryCode(value.name.common,value.idd.root + value.idd.suffixes.at(0))))
       })
       
-      
+
       console.log(this.countryCodes)
     }catch(e){
        console.log(e)

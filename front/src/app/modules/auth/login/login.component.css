@@ -1,3 +1,18 @@
 .card {
-  width: 500px;
+  border: none;
+}
+
+.btn-orange {
+  background-color: #ff6b00;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-orange:hover {
+  background-color: #ff6a00e4;
+}
+
+.orangeColor {
+  color: #ff6b00;
 }

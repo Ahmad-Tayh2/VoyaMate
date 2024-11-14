@@ -22,9 +22,6 @@ export class UserService {
             email: addUserDTO.email,
             password: hashedPassword,
             phone: addUserDTO.phone,
-            verifiedAt: null,
-            createdAt: new Date(),
-            updatedAt: new Date()
         });
         const savedUser=await this.repository.save(newUser);
         return savedUser;

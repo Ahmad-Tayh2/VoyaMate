@@ -1,8 +1,8 @@
-import { MailService } from '../../mailService/mail.service';
+import { MailService } from './mailService/mail.service';
 import { Body, Controller,Get,HttpException,HttpStatus,Logger,Post, Query } from '@nestjs/common';
-import { AddUserDTO } from '../../dtos/add-user.dto';
+import { AddUserDTO } from './dtos/add-user.dto';
 import { User } from 'src/modules/user/user.entity';
-import { SignupService } from '../../services/signup/signup.service';
+import { AuthService } from './auth.service';
 
 
 type Response={
@@ -11,18 +11,17 @@ type Response={
     errorMessage?:string;
 } 
 
-@Controller('signup')
-export class SignupController {
+@Controller('auth')
+export class AuthController {
     constructor(
-        private readonly signupService: SignupService,
+        private readonly signupService: AuthService,
         private readonly mailService: MailService,
     ) {}
 
-    @Post()
+    @Post("/register")
     async registerUser(@Body() addUserDTO: AddUserDTO): Promise<Response> {
         try { 
             const user = await this.signupService.addUser(addUserDTO);
-            console.log(user);
             await this.mailService.sendVerificationMail(user.id); //this shouldnt be here because its slowing down the registration cron job maybe?
                         
             return {
@@ -41,7 +40,6 @@ export class SignupController {
             );
         }
     }
-
     @Get("/confirm")
     async confirmUser(@Query("token") token: string, @Query("id") userId:number): Promise<Response> {
         try {

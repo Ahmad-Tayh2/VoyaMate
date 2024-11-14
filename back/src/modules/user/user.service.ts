@@ -38,5 +38,15 @@ export class UserService {
         const updatedUser = await this.repository.save(user);
         return updatedUser;
     }
+
+    async findByEmail(email: string): Promise<User | undefined> {
+      const user = await this.repository.findOne({ where: { email } });
+      console.log('User found:', user); // Afficher le résultat dans la console
+      return user;
+    }
+    async updatePassword(userId: number, newPassword: string): Promise<void> {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await this.repository.update(userId, { password: hashedPassword });
+    }
     
-}
+  }

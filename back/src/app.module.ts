@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthController } from './modules/auth/auth.controller';
 import { AuthService } from './modules/auth/auth.service';
 import { MailService } from './modules/auth/mailService/mail.service';
+import { JwtModule } from '@nestjs/jwt';
+
 
 @Module({
   imports: [
@@ -17,19 +19,22 @@ import { MailService } from './modules/auth/mailService/mail.service';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get<string>(process.env.DATABASE_HOST),
-        port: configService.get<number>(process.env.DATABASE_PORT),
-        username: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: 'travel_db',
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'mysql',
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_DATABASE'),
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],//autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
     }),
     UserModule,
     AuthModule,
+    JwtModule
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, MailService],

@@ -25,7 +25,6 @@ export class AuthController {
     async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     const { email } = resetPasswordDto;
     
-    // Vérifier si l'utilisateur existe
     const user = await this.userservice.findByEmail(email);
     if (!user) {
       throw new Error('User not found');

@@ -26,7 +26,7 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   verifiedAt: Date | null;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: 'timestamp' })//unique=false
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })

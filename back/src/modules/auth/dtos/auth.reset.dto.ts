@@ -1,5 +1,9 @@
+import { IsString, IsEmail } from 'class-validator';
 
 export class ResetPasswordDto  {
+    @IsEmail()
     email:string;
-    password:'string';
+
+    @IsString()
+    password:string;
 }

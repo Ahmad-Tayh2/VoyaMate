@@ -9,12 +9,13 @@ import { ConfigService } from '@nestjs/config';
 export class MailService {
     private transporter:nodemailer.Transporter;
 
-    constructor(private configservice:ConfigService, private readonly userService: UserService) {
+    constructor(
+        private configService:ConfigService, private readonly userService: UserService) {
         this.transporter = nodemailer.createTransport({
           service: 'gmail', 
           auth: {
-            user: this.configservice.get<string>('EMAIL_ADDRESS'),
-            pass: this.configservice.get<string>('EMAIL_PASSWORD'),
+            user: this.configService.get<string>('EMAIL_ADDRESS'),
+            pass: this.configService.get<string>('EMAIL_PASSWORD'),
           },
         });
       }
@@ -27,7 +28,7 @@ export class MailService {
         const email:string=user.email;
         const token=generateToken(userId)
         const subject="VoyaMate Email Verification";
-        const baseUrl=process.env.BASE_URL || "localhost:3000";
+        const baseUrl= this.configService.get<string>("FRONTEND_URL");
         const confirmationLink = `http://${baseUrl}/auth/confirm?id=${userId}&token=${token}`;
         const htmlContent = `
         <!DOCTYPE html>
@@ -69,7 +70,7 @@ export class MailService {
 
     async sendResetPasswordEmail(email: string, resetLink: string) {
         const mailOptions = {
-          from: this.configservice.get<string>('EMAIL'),
+          from: this.configService.get<string>('EMAIL'),
           to: email,
           subject: 'Reset your password',
           text: `Click on the following link to reset your password: ${resetLink}`,

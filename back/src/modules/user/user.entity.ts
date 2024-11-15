@@ -20,13 +20,13 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column()
   phone: string;
 
   @Column({ type: 'timestamp', nullable: true })
   verifiedAt: Date | null;
 
-  @CreateDateColumn({ type: 'timestamp' })//unique=false
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })

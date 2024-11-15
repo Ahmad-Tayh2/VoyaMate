@@ -33,8 +33,7 @@ export class AuthController {
             await this.mailService.sendVerificationMail(user.id); //this shouldnt be here because its slowing down the registration cron job maybe?
                         
             return {
-                message:"User registered successfully",
-                user:user
+                message:"Verification Email sent successfully!",
             };
         } catch (err) {
 

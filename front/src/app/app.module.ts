@@ -19,9 +19,9 @@ import { ToastrModule } from 'ngx-toastr';
     ReactiveFormsModule,
     HttpClientModule,
     ToastrModule.forRoot({
-      timeOut: 3000,  // Duration the toast will remain visible
+      timeOut: 4500,  // Duration the toast will remain visible
       positionClass: 'toast-top-right',  // Position on the screen
-      preventDuplicates: true,  // Prevent multiple toasts of the same message
+      preventDuplicates: false,  // Prevent multiple toasts of the same message
     })
   ],
   providers: [

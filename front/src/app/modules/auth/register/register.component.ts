@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit{
   countrycodeService = inject(CountrycodeService);
   router = inject(Router);
   authService = inject(AuthService)
+  loading : boolean = false;
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,16 +50,18 @@ export class RegisterComponent implements OnInit{
     if (this.registerForm.valid) {
 
       try{     
+        
+        this.loading = true;
         this.authService.register(this.registerForm.value).subscribe(
           (result) =>{
-          this.authService.cacheToken(result.token)
-          this.router.navigate([''])
+          this.toastr.success(`Email verification is sent to ${this.registerForm.value.email}.`,'Success')
+         this.loading = false;
+          this.router.navigate(['register'])
 
-          this.toastr.success('Registration succeeded.','Success')
 
         },
       (error) => {
-        this.toastr.error(error,'Error')
+        this.toastr.success(error.error,'Error')
 
       })
         

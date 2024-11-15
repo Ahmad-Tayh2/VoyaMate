@@ -14,6 +14,7 @@ export class AuthService {
   constructor() {}
  
   register(data : Register):Observable<any>{
+    console.log(data)
       return this.http.post(APP_API.register,data)
 
   }

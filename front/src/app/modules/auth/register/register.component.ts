@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { CountrycodeService } from 'src/app/core/services/countryservice/countrycode.service';
 import { CountryCode } from 'src/app/models/coutryCode/countryCode';
+import { Register } from 'src/app/models/register/register.model';
 
 @Component({
   selector: 'app-register',
@@ -52,18 +53,21 @@ export class RegisterComponent implements OnInit{
       try{     
         
         this.loading = true;
-        this.authService.register(this.registerForm.value).subscribe(
+        const form = this.registerForm.value;
+        console.log(form.email)
+        this.authService.register(new Register(form.email,form.password,form.username,form.phone)).subscribe(
           (result) =>{
           this.toastr.success(`Email verification is sent to ${this.registerForm.value.email}.`,'Success')
-         this.loading = false;
           this.router.navigate(['register'])
 
 
         },
       (error) => {
-        this.toastr.success(error.error,'Error')
+        this.toastr.error(error.message,'Error')
 
       })
+      this.loading = false;
+
         
       }catch(e){
 

@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CountryCode } from 'src/app/core/models/countryCode';
-import { CountrycodeService } from 'src/app/services/countryservice/countrycode.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { CountrycodeService } from 'src/app/core/services/countryservice/countrycode.service';
+import { CountryCode } from 'src/app/models/coutryCode/countryCode';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +16,11 @@ export class RegisterComponent implements OnInit{
   countryCodes : CountryCode[] = [];
   selectedCountry? : CountryCode;
 
-  constructor(private fb: FormBuilder,private countrycodeService : CountrycodeService) {
+  toastr = inject(ToastrService)
+  countrycodeService = inject(CountrycodeService);
+  router = inject(Router);
+  authService = inject(AuthService)
+  constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required, Validators.minLength(6)]],
@@ -24,12 +31,13 @@ export class RegisterComponent implements OnInit{
     });
   }
   ngOnInit() {
+
     try{
       this.countrycodeService.getAllCodes().subscribe((data)=>{
         data.filter((value)=> value.idd && value.idd.root)
         .map((value)=> this.countryCodes.push(new CountryCode(value.name.common,value.idd.root + value.idd.suffixes.at(0))))
       })
-      
+
 
       console.log(this.countryCodes)
     }catch(e){
@@ -39,7 +47,26 @@ export class RegisterComponent implements OnInit{
   }
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
+
+      try{     
+        this.authService.register(this.registerForm.value).subscribe(
+          (result) =>{
+          this.authService.cacheToken(result.token)
+          this.router.navigate([''])
+
+          this.toastr.success('Registration succeeded.','Success')
+
+        },
+      (error) => {
+        this.toastr.error(error,'Error')
+
+      })
+        
+      }catch(e){
+
+        console.log(e)
+      }
+
     } else {
       this.registerForm.markAllAsTouched(); // Show all validation errors
     }
@@ -48,4 +75,6 @@ export class RegisterComponent implements OnInit{
   checkInputState(name : string):boolean | undefined{
     return this.registerForm.get(name)?.value.length < 8  && this.registerForm.get(name)?.touched;
   }
+
+
 }

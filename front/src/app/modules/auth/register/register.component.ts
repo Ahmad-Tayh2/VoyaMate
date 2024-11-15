@@ -58,7 +58,7 @@ export class RegisterComponent implements OnInit{
         this.authService.register(new Register(form.email,form.password,form.username,form.phone)).subscribe(
           (result) =>{
           this.toastr.success(`Email verification is sent to ${this.registerForm.value.email}.`,'Success')
-          this.router.navigate(['register'])
+          this.router.navigate([''])
 
 
         },

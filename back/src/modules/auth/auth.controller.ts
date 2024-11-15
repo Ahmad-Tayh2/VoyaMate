@@ -71,7 +71,7 @@ export class AuthController {
 
     @Post('login')
         
-    async login(@Body() loginDto:AuthDto){
+    async login(@Body() loginDto:AuthDto):Promise<{ access_token: string }>{
         const user = await this.authservice.validateUser(loginDto.email,loginDto.password);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
@@ -79,7 +79,7 @@ export class AuthController {
         return this.authservice.login(user); 
         }
     @Post('forgot-password')
-    async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto):Promise<{message:string}> {
     const { email } = resetPasswordDto;
 
     const user = await this.userService.findByEmail(email);
@@ -101,7 +101,7 @@ export class AuthController {
 
 
     @Post('reset-password/:token')
-    async resetPassword(@Param('token') token: string, @Body() resetPasswordDto: ResetPasswordDto) {
+    async resetPassword(@Param('token') token: string, @Body() resetPasswordDto: ResetPasswordDto):Promise<{message:string}> {
     // Vérifier le token
     const userId = await this.authservice.verifyResetToken(token);
 

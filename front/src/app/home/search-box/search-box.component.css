@@ -26,6 +26,20 @@
   box-shadow: 0 0 8px rgba(37, 117, 252, 0.5);
 }
 
+  
+.btn-gradient {
+  width: 15%;
+  background: linear-gradient(45deg, #FF5300, #2575fc);
+  border: none;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(45deg, #2575fc, #FF5300);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 .textfield {
   width: 50%;
 }

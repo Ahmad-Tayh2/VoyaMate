@@ -19,6 +19,10 @@ export class AuthService {
 
   }
 
+  verifyEmail(id : string , token : string):Observable<any>{
+    return this.http.get(`${APP_API.confirm}?id=${id}&token=${token}`)
+  }
+
   cacheToken(token : string){
     localStorage.setItem('token',token)
   }

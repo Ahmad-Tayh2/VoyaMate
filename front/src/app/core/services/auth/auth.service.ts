@@ -16,4 +16,7 @@ export class AuthService {
   SendResetLink(email: string) {
     return this.http.post(APP_API.recoverPassword, email);
   }
+  resetPassword(token: string, password: string) {
+    return this.http.post(APP_API.resetPassword + token, password);
+  }
 }

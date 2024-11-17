@@ -77,7 +77,7 @@ export class AuthController {
         }
         return this.authservice.login(user); 
         }
-    @Post('forgot-password')
+    @Post('recover-password')
     async forgotPassword(@Body() resetPasswordDto: ForgotPasswordDto):Promise<{message:string}> {
     const { email } = resetPasswordDto;
 
@@ -91,7 +91,7 @@ export class AuthController {
 
     // Envoyer un e-mail avec le lien de réinitialisation
     // const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`; 
-     const resetLink=this.configService.get("FRONTEND_URL")+"/auth/reset-password/"+resetToken;
+     const resetLink=this.configService.get("FRONTEND_URL")+"/auth/recover-password/"+resetToken;
 
     await this.mailService.sendResetPasswordEmail(user.email, resetLink);
 

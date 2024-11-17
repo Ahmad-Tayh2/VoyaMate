@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
@@ -12,6 +13,7 @@ export class RecoverPasswordComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   authService = inject(AuthService);
+  toastr = inject(ToastrService);
   isVisible = false;
 
   handleRecover(form: NgForm) {
@@ -21,9 +23,10 @@ export class RecoverPasswordComponent {
         .subscribe({
           next: () => {
             this.router.navigate(['/login']);
+            this.toastr.success('Password reset successfully');
           },
           error: (error) => {
-            console.log(error);
+            this.toastr.error('Something went wrong please try again');
           },
         });
     });

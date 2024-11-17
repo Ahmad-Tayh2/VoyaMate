@@ -6,7 +6,7 @@ import { AuthDto } from './dtos/auth.dto';
 import { User } from 'src/modules/user/user.entity';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { ResetPasswordDto } from './dtos/auth.reset.dto';
+import { ForgotPasswordDto, ResetPasswordDto } from './dtos/auth.reset.dto';
 
 
 type Response={
@@ -78,7 +78,7 @@ export class AuthController {
         return this.authservice.login(user); 
         }
     @Post('forgot-password')
-    async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto):Promise<{message:string}> {
+    async forgotPassword(@Body() resetPasswordDto: ForgotPasswordDto):Promise<{message:string}> {
     const { email } = resetPasswordDto;
 
     const user = await this.userService.findByEmail(email);

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { AddUserDTO } from '../auth/dtos/add-user.dto';
+import { AddUserDTO } from '../auth/dtos/add.user.dto';
 
 @Injectable()
 export class UserService {
@@ -27,11 +27,8 @@ export class UserService {
         return savedUser;
     }
 
-    async findUserById(userId: number): Promise<User> {
-        const user = await this.repository.findOne({ where :{id:userId} });
-        if (! user){
-            throw new NotFoundException(`User with id ${userId} not found`);
-        }
+    async findUserById(userId: number): Promise<User | null> {
+        const user = await this.repository.findOne({ where :{id:userId}, relations:['memberItineraries'] });       
        return user
     }
     async updateUser(user: User): Promise<User> {
@@ -40,7 +37,7 @@ export class UserService {
     }
 
     async findByEmail(email: string): Promise<User | undefined> {
-      const user = await this.repository.findOne({ where: { email } });
+      const user = await this.repository.findOne({ where: { email }, relations:['memberItineraries'] });
       return user;
     }
     async updatePassword(userId: number, newPassword: string): Promise<void> {

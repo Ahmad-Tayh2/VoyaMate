@@ -22,6 +22,9 @@ export class MailService {
 
     async sendVerificationMail(userId:number){
         const user:User= await this.userService.findUserById(userId)
+        if (!user){
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
         if (user.verifiedAt){
             throw new NotFoundException(`User with id ${userId} is already verified`);
         }
@@ -60,6 +63,9 @@ export class MailService {
 
     async verifyUserEmail(userId:number,token:string){
         const user= await this.userService.findUserById(userId)
+        if (!user){
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
        if (!verifyToken(userId,token)){
             throw new Error("Invalid or expired token")
        }

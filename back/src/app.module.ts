@@ -9,6 +9,8 @@ import { AuthController } from './modules/auth/auth.controller';
 import { AuthService } from './modules/auth/auth.service';
 import { MailService } from './modules/auth/mailService/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ItineraryModule } from './modules/itinerary/itinerary.module';
+import { ItineraryService } from './modules/itinerary/itinerary.service';
 
 
 @Module({
@@ -34,7 +36,8 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     UserModule,
     AuthModule,
-    JwtModule
+    JwtModule,
+    ItineraryModule
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, MailService],

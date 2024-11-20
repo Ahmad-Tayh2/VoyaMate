@@ -14,7 +14,7 @@ export class IsOwnerGuard implements CanActivate {
     const itineraryId=request.params.id;
 
     const itinerary=await this.itineraryService.findItineraryById(itineraryId);
-    if(itinerary.owner.id!==userId){
+    if(!itinerary || itinerary.owner.id!==userId){
       return false;
     }
     return true;

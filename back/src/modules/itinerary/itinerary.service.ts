@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
-import { AddItineraryDTO } from './dtos/add.itinerary.dto';
+import { AddItineraryDTO } from './dtos/addItinerary.dto';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 
@@ -21,7 +21,7 @@ export class ItineraryService {
     ){}
 
     async createItinerary(itineraryDTO: AddItineraryDTO):Promise<Itinerary> {
-        const user=await this.userService.findUserById(itineraryDTO.owner);
+        const user=await this.userService.findUserById(itineraryDTO.ownerId);
         if (!user){
             throw new Error('User not found');
         }
@@ -54,6 +54,38 @@ export class ItineraryService {
         return itinerary;
     }
 
+    async getItinerariesByFilter(filter: Record<string,any>): Promise<Itinerary[]> {
+        const validFilterKeys = ['name', 'budget', 'ownerId', 'userId']; 
+        
+        //check if the filter is valid
+        const invalidKeys = Object.keys(filter).filter(key => !validFilterKeys.includes(key));
+        if (invalidKeys.length > 0) {
+            throw new Error("Invalid filter");
+        }
+
+        let whereConditions: any = {};
+
+        //handle userId key
+        if ("userId" in filter) {
+            const user = await this.userService.findUserById(filter.userId);
+            
+            if (user){
+            whereConditions = { owner: { id:filter.userId } };
+            }
+        }
+
+        if ("name" in filter){
+            whereConditions.name=filter.name;
+        }
+        if ("budget" in filter){
+            whereConditions.budget= filter.budget;
+        }
+
+       const itinerariesFiltered=await this.repository.find({ where: whereConditions, relations: ['members','owner']})
+
+        return itinerariesFiltered;
+    }
+
     async deleteItinerary(itineraryId: number): Promise<Response> {
         const result=await this.repository.delete(itineraryId);
         if (result.affected===0){
@@ -71,7 +103,6 @@ export class ItineraryService {
         if (!user) {
           throw new Error('User not found');
         }
-        console.log("itinerary owner id:",itinerary);        
         if (!itinerary.members.some(member => member.id === user.id) && itinerary.owner.id !== user.id && !user.memberItineraries?.some(memberItinerary => memberItinerary.id === itinerary.id)) {
             itinerary.members.push(user);
             user.memberItineraries.push(itinerary);

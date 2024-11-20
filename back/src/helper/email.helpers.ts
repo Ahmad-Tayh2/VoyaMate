@@ -1,11 +1,11 @@
 import { createHmac } from 'crypto';
 
 
-export function generateToken(userId:number,expiresInMinutes:number=10):string{
+export function generateToken(userIdOrMail: number | string ,expiresInMinutes:number=10):string{
     const expirationTime = Date.now() + expiresInMinutes * 60 * 1000; 
     const secret_key=process.env.EMAIL_VERIFICATION_SECRET_KEY
     const hash = createHmac('sha256', secret_key) 
-    .update(userId+ expirationTime.toString()) 
+    .update(userIdOrMail+ expirationTime.toString()) 
     .digest('hex');
     return `${hash}.${expirationTime}`
 }

@@ -9,6 +9,7 @@ import { AuthController } from './modules/auth/auth.controller';
 import { AuthService } from './modules/auth/auth.service';
 import { MailService } from './modules/auth/mailService/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ActivityModule } from './modules/activity/activity.module';
 
 
 @Module({
@@ -29,12 +30,14 @@ import { JwtModule } from '@nestjs/jwt';
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],//autoLoadEntities: true,
           synchronize: true,
+          logging:true,
         };
       },
     }),
     UserModule,
     AuthModule,
-    JwtModule
+    JwtModule,
+    ActivityModule
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, MailService],

@@ -1,0 +1,73 @@
+
+.sidebar {
+  width: 270px;
+  background-color: white; 
+  height: 100vh; 
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins';
+}
+
+.profile {
+  display: flex; 
+  align-items: center; 
+  text-align: left; 
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #ffffff; 
+  border-radius: 15px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.profile img.avatar {
+  width: 60px; 
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px; 
+}
+
+.profile h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile p {
+  color: #6c757d; 
+  font-size: 0.7rem;
+  margin: 0.2rem; 
+}
+
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin: 15px 0;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #343a40;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu a .icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  
+}
+
+.menu a:hover {
+  background-color: #FFA902; 
+  color: white; 
+}
+

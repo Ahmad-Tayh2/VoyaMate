@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Body, Controller,Get,HttpException,HttpStatus,Param,Post, Query, UnauthorizedException } from '@nestjs/common';
 import { MailService } from './mailService/mail.service';
-import { AddUserDTO } from './dtos/add-user.dto';
+import { AddUserDTO } from './dtos/add.user.dto';
 import { AuthDto } from './dtos/auth.dto';
 import { User } from 'src/modules/user/user.entity';
 import { AuthService } from './auth.service';

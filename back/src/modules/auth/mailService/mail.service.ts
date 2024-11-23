@@ -4,6 +4,7 @@ import { generateToken, verifyToken } from 'src/helper/email.helpers';
 import { User } from 'src/modules/user/user.entity';
 import { UserService } from 'src/modules/user/user.service';
 import { ConfigService } from '@nestjs/config';
+import { SendMailObject } from 'src/shared/interfaces/email.interface';
 
 @Injectable()
 export class MailService {
@@ -20,53 +21,48 @@ export class MailService {
         });
       }
 
-    async sendVerificationMail(userId:number){
-        const user:User= await this.userService.findUserById(userId)
-        if (!user){
-            throw new NotFoundException(`User with id ${userId} not found`);
-        }
-        if (user.verifiedAt){
-            throw new NotFoundException(`User with id ${userId} is already verified`);
-        }
-        const email:string=user.email;
-        const token=generateToken(userId)
-        const subject="VoyaMate Email Verification";
+    async sendConfirmationMail(sendmailObject:SendMailObject){
+
+        let subject:string;
+        let content:string;
+        const email=sendmailObject.to;
+        const token=generateToken(email)
         const baseUrl= this.configService.get<string>("FRONTEND_URL");
-        const confirmationLink = `http://${baseUrl}/auth/confirm?id=${userId}&token=${token}`;
-        const htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Email Confirmation</title>
-        </head>
-        <body>
-            <h2>Confirm Your Account</h2>
-            <p>To confirm your account, please click the link below:</p>
-            <p><a href="${confirmationLink}" target="_blank" style="color: blue; text-decoration: underline;">Click here to confirm your account</a></p>
-            <p>If you did not request this, please ignore this email.</p>
-        </body>
-        </html>
-    `;
+        let confirmationLink="";
+    
+        switch(sendmailObject.type){
+            case "account":{
+                subject="VoyaMate Email Verification";
+                content="To confirm your account, please click the link below:\n";
+                confirmationLink +=`${baseUrl}/auth/confirm?token=${token}`;
+                break;
+
+            }
+            case "member":{
+                subject="VoyaMate Member Request";
+                content="You have been invited to join a trip. Click the link below to accept the invitation:\n";
+                confirmationLink += `${baseUrl}/itinerary/member/confirm?id=${sendmailObject.to}&token=${token}`;
+                break;
+
+            }
+        }
         try{
             await this.transporter.sendMail({
                 from:process.env.MAIL_USER,
                 to:email,
                 subject,
-                html:htmlContent
+                text:content+confirmationLink
             });
         }catch(err){
             console.error("Error sending mail",err);
+
         }
     }
 
     async verifyUserEmail(userId:number,token:string){
         const user= await this.userService.findUserById(userId)
-        if (!user){
-            throw new NotFoundException(`User with id ${userId} not found`);
-        }
-       if (!verifyToken(userId,token)){
+
+       if (!verifyToken(user.email,token)){
             throw new Error("Invalid or expired token")
        }
         user.verifiedAt=new Date();

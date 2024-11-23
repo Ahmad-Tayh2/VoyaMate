@@ -2,11 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
-import { AddOrUpdateItineraryDTO } from './dtos/addItinerary.dto';
+import { AddOrUpdateItineraryDTO } from './dtos/add-itinerary.dto';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
-import { ItineraryResponseDto } from './dtos/itineraryResponse.dto';
-import { PaginatedResponseDto } from './dtos/paginatedResponse.dto';
+import { ItineraryResponseDto } from './dtos/itinerary-response.dto';
+import { PaginatedResponseDto } from './dtos/paginated-response.dto';
 import { transformItineraryToDto } from 'src/helper/toItineraryDto';
 import { ApiResponse } from '../../shared/interfaces/response.interface';
 

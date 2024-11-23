@@ -1,16 +1,16 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post,UseGuards, Request, Delete, Query, Patch } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
-import { AddOrUpdateItineraryDTO } from './dtos/addItinerary.dto';
+import { AddOrUpdateItineraryDTO } from './dtos/add-itinerary.dto';
 import { MemberRequestMail } from '../../shared/interfaces/email.interface';
 import { ApiResponse } from 'src/shared/interfaces/response.interface';
 import { JwtAuthGuard } from '../auth/GUARD/auth.guard'
 import { IsOwnerGuard } from './guards/is-owner.guard';
-import { ItineraryResponseDto } from './dtos/itineraryResponse.dto';
-import { PaginatedResponseDto } from './dtos/paginatedResponse.dto';
+import { ItineraryResponseDto } from './dtos/itinerary-response.dto';
+import { PaginatedResponseDto } from './dtos/paginated-response.dto';
 import { MailService } from '../auth/mailService/mail.service';
 import { IsVerifiedGuard } from './guards/is-verified.guard';
-import { FilterItinerariesDto } from './dtos/filterItineraries.dto';
-import { addMemberDto } from './dtos/addMember.dto';
+import { FilterItinerariesDto } from './dtos/filter-itineraries.dto';
+import { addMemberDto } from './dtos/add-member.dto';
 import { AuthService } from '../auth/auth.service';
 
 

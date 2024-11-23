@@ -105,9 +105,9 @@ export class ItineraryService {
         return {success:true, message:'Itinerary deleted successfully'};
     }
 
-    async addMember(itineraryId: number, userId: number): Promise<ApiResponse<null>> {
+    async addMember(itineraryId: number, memberId: number): Promise<ApiResponse<null>> {
         const itinerary = await this.repository.findOne({ where :{id: itineraryId}, relations: ['members', 'owner'] });
-        const user: User = await this.userService.findUserById(userId);
+        const user: User = await this.userService.findUserById(memberId);
        
         if (!itinerary.members.some(member => member.id === user.id) && itinerary.owner.id !== user.id && !user.memberItineraries?.some(memberItinerary => memberItinerary.id === itinerary.id)) {
             itinerary.members.push(user);
@@ -117,7 +117,7 @@ export class ItineraryService {
             await this.userService.updateUser(user);
 
           } else {
-            return {success: false ,message:"The user is already a member or is an owner." }
+            return {success: false ,message:"The user is already a member or an owner." }
           }
         return {success: true,message:"Member added successfully to the itinerary" }
     }

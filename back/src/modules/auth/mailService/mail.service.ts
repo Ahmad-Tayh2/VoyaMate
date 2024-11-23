@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-=import { UserService } from 'src/modules/user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { SendMailObject } from 'src/shared/interfaces/email.interface';
 
@@ -9,7 +8,7 @@ export class MailService {
     private transporter:nodemailer.Transporter;
 
     constructor(
-        private configService:ConfigService, private readonly userService: UserService) {
+        private configService:ConfigService) {
         this.transporter = nodemailer.createTransport({
           service: 'gmail', 
           auth: {
@@ -31,6 +30,7 @@ export class MailService {
             case "account":{
                 subject="VoyaMate Email Verification";
                 content="To confirm your account, please click the link below:\n";
+                //this can be changed depending on the front
                 confirmationLink +=`${baseUrl}/auth/confirm?token=${token}`;
                 break;
 
@@ -38,6 +38,7 @@ export class MailService {
             case "member":{
                 subject="VoyaMate Member Request";
                 content="You have been invited to join a trip. Click the link below to accept the invitation:\n";
+                //this can be changed depending on the front
                 confirmationLink += `${baseUrl}/itinerary/member/confirm?token=${token}`;
                 break;
 
@@ -55,13 +56,6 @@ export class MailService {
 
         }
     }
-
-    // async verifyMemberInvitation(memberEmail:string,token:string){
-    //     if (!verifyToken(memberEmail,token)){
-    //         throw new Error("Invalid or expired token")
-    //    }
-    //    return true;
-    // }
 
     async sendResetPasswordEmail(email: string, resetLink: string) {
         const mailOptions = {

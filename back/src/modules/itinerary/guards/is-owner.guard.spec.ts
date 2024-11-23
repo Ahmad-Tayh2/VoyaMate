@@ -1,7 +1,9 @@
-import { IsOwnerGuard } from '../../modules/itinerary/gards/is-owner.guard';
+import { ItineraryService } from '../itinerary.service';
+import { IsOwnerGuard } from './is-owner.guard';
 
 describe('IsOwnerGuard', () => {
   it('should be defined', () => {
-    expect(new IsOwnerGuard()).toBeDefined();
+    const itineraryService = {} as ItineraryService;
+    expect(new IsOwnerGuard(itineraryService)).toBeDefined();
   });
 });

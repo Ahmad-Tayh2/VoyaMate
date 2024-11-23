@@ -61,6 +61,7 @@ export class AuthService {
     } 
     async verifyToken(token: string):Promise<any>{
       const decoded = this.jwtservice.verify(token, { secret:this.secret_key });
+      console.log(decoded)
       return decoded
     }
 

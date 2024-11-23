@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards, Request, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post,UseGuards, Request, Delete, Query, Patch } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { AddOrUpdateItineraryDTO } from './dtos/addItinerary.dto';
 import { MemberRequestMail } from '../../shared/interfaces/email.interface';
@@ -10,6 +10,8 @@ import { PaginatedResponseDto } from './dtos/paginatedResponse.dto';
 import { MailService } from '../auth/mailService/mail.service';
 import { IsVerifiedGuard } from './guards/is-verified.guard';
 import { FilterItinerariesDto } from './dtos/filterItineraries.dto';
+import { addMemberDto } from './dtos/addMember.dto';
+import { AuthService } from '../auth/auth.service';
 
 
 
@@ -19,6 +21,7 @@ export class ItineraryController {
     constructor(
         private readonly itineraryService: ItineraryService,
         private readonly mailService: MailService,
+        private readonly authService: AuthService
     ) 
     {}
 
@@ -44,14 +47,19 @@ export class ItineraryController {
     }
 
     @UseGuards(IsOwnerGuard)
-    @Post("/add-member/:id")
-    async inviteMember(@Body() data:{ userEmail:string }, @Param("id") itineraryId:number): Promise<ApiResponse<null>>{
+    @Patch("/invite-member/:id")
+    async inviteMember(@Body() data:addMemberDto, @Param("id") itineraryId:number): Promise<ApiResponse<null>>{
         const senMailObject:MemberRequestMail={
             type:"member",
-            to: data.userEmail,
+            to: data.memberEmail,
         }
         try{
-            await this.mailService.sendConfirmationMail(senMailObject);
+            const token=this.authService.generateToken({
+                memberId:data.memberId,
+                itineraryId
+            },"1h")
+
+            await this.mailService.sendConfirmationMail(senMailObject,token);
             return {
                 success:true,
                 message:"Invitation mail sent successfully"
@@ -63,14 +71,11 @@ export class ItineraryController {
 
 
    @Get("/confirm-member")
-    async confirmMember(@Query("token") token: string, @Query("id") userId:number): Promise<ApiResponse<null>> {
+    async confirmMember(@Query("token") token: string): Promise<ApiResponse<null>> {
          try {
-              if (await this.mailService.verifyUserEmail(userId,token))
+              const payload=await this.authService.verifyToken(token)
               {
-                return {
-                     success:true,
-                     message:"User email confirmed successfully",
-                }
+                return await this.itineraryService.addMember(payload.itineraryId,payload.memberId)
               }
          } catch (err) {
               console.error("Error while confirming user email",err)
@@ -85,7 +90,7 @@ export class ItineraryController {
         }
 
         @UseGuards(IsOwnerGuard)
-        @Put("/api/update/:id")
+        @Patch("/update/:id")
         async updateItinerary(@Param('id') itineraryId:number, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
             return await this.itineraryService.updateItinerary(itineraryId, data)
     

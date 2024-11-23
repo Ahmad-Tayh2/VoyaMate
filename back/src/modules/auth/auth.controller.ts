@@ -31,8 +31,10 @@ export class AuthController {
                 type: "account",
                 to: user.email,
             }
-            
-            await this.mailService.sendConfirmationMail(sendMailObject);          
+            const token = this.authservice.generateToken({
+                userId:user.id
+            },"1h");
+            await this.mailService.sendConfirmationMail(sendMailObject,token);          
             return {
                 success: true,
                 message:"Verification Email sent successfully!",
@@ -52,23 +54,24 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get("/verify-email")
     async verifyEmail(@Request() req): Promise<ApiResponse<null>>{
-        const userEmail=req.user.email;
         const sendMailObject: AccountConfirmationMail = {
             type: "account",
-            to: userEmail,
+            to: req.user.email,
         }
-        await this.mailService.sendConfirmationMail(sendMailObject);          
+        const token = this.authservice.generateToken({
+            userId:req.user.id
+        },"1h");
+        await this.mailService.sendConfirmationMail(sendMailObject,token);          
         return {
             success: true,
             message:"Verification Email sent successfully!",
         };
     }
     @UseGuards(JwtAuthGuard)
-    @Get("/confirm")
-    async confirmUser(@Request() req, @Query("token") token: string): Promise<ApiResponse<null>> {
+    @Get("/confirm-email")
+    async confirmUser(@Query("token") token: string): Promise<ApiResponse<null>> {
         try {
-            const userId=req.user.userId;
-            if (await this.mailService.verifyUserEmail(userId,token))
+            await this.authservice.verifyUserEmail(token)
             {
                 return {
                     success:true,

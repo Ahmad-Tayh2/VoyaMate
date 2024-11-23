@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { generateToken, verifyToken } from 'src/helper/email.helpers';
-import { User } from 'src/modules/user/user.entity';
-import { UserService } from 'src/modules/user/user.service';
+=import { UserService } from 'src/modules/user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { SendMailObject } from 'src/shared/interfaces/email.interface';
 
@@ -21,12 +19,11 @@ export class MailService {
         });
       }
 
-    async sendConfirmationMail(sendmailObject:SendMailObject){
+    async sendConfirmationMail(sendmailObject:SendMailObject,token:string){
 
         let subject:string;
         let content:string;
         const email=sendmailObject.to;
-        const token=generateToken(email)
         const baseUrl= this.configService.get<string>("FRONTEND_URL");
         let confirmationLink="";
     
@@ -41,7 +38,7 @@ export class MailService {
             case "member":{
                 subject="VoyaMate Member Request";
                 content="You have been invited to join a trip. Click the link below to accept the invitation:\n";
-                confirmationLink += `${baseUrl}/itinerary/member/confirm?id=${sendmailObject.to}&token=${token}`;
+                confirmationLink += `${baseUrl}/itinerary/member/confirm?token=${token}`;
                 break;
 
             }
@@ -59,16 +56,12 @@ export class MailService {
         }
     }
 
-    async verifyUserEmail(userId:number,token:string){
-        const user= await this.userService.findUserById(userId)
-
-       if (!verifyToken(user.email,token)){
-            throw new Error("Invalid or expired token")
-       }
-        user.verifiedAt=new Date();
-        await this.userService.updateUser(user);
-        return true;
-    }
+    // async verifyMemberInvitation(memberEmail:string,token:string){
+    //     if (!verifyToken(memberEmail,token)){
+    //         throw new Error("Invalid or expired token")
+    //    }
+    //    return true;
+    // }
 
     async sendResetPasswordEmail(email: string, resetLink: string) {
         const mailOptions = {

@@ -1,11 +1,11 @@
 import { IsString, IsEmail, IsOptional } from 'class-validator';
 
-export class ResetPasswordDto  {
+export class ForgotPasswordDto {
     @IsEmail()
-    @IsOptional()
-    email?: string;
+    email: string;
+}
 
+export class ResetPasswordDto  {
     @IsString()
-    @IsOptional()
-    password?: string;
+    password: string;
 }

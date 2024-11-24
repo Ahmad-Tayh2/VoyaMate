@@ -1,12 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { Body, Controller,Get,HttpException,HttpStatus,Param,Post, Query, UnauthorizedException } from '@nestjs/common';
 import { MailService } from './mailService/mail.service';
-import { AddUserDTO } from './dtos/add-user.dto';
+import { AddUserDTO } from './dtos/add.user.dto';
 import { AuthDto } from './dtos/auth.dto';
 import { User } from 'src/modules/user/user.entity';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { ResetPasswordDto } from './dtos/auth.reset.dto';
+import { ForgotPasswordDto, ResetPasswordDto } from './dtos/auth.reset.dto';
 
 
 type Response={
@@ -77,8 +77,8 @@ export class AuthController {
         }
         return this.authservice.login(user); 
         }
-    @Post('forgot-password')
-    async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto):Promise<{message:string}> {
+    @Post('recover-password')
+    async forgotPassword(@Body() resetPasswordDto: ForgotPasswordDto):Promise<{message:string}> {
     const { email } = resetPasswordDto;
 
     const user = await this.userService.findByEmail(email);
@@ -91,7 +91,7 @@ export class AuthController {
 
     // Envoyer un e-mail avec le lien de réinitialisation
     // const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`; 
-     const resetLink=this.configService.get("FRONTEND_URL")+"/auth/reset-password/"+resetToken;
+     const resetLink=this.configService.get("FRONTEND_URL")+"/auth/recover-password/"+resetToken;
 
     await this.mailService.sendResetPasswordEmail(user.email, resetLink);
 

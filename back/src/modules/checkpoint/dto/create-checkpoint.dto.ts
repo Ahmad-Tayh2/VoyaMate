@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsDateString,
-  IsDecimal,
-  IsNotEmpty,
-  IsNumber,
-} from 'class-validator';
+import { IsBoolean, IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateCheckpointDto {
   @IsNumber()
@@ -19,11 +13,11 @@ export class CreateCheckpointDto {
   @IsNotEmpty()
   checked: boolean;
 
-  @IsDecimal()
+  @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 6 })
   @IsNotEmpty()
   longitude: number;
 
-  @IsDecimal()
+  @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 6 })
   @IsNotEmpty()
   latitude: number;
 }

@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Itinerary } from '../itinerary/itinerary.entity';
+import { Activity } from '../activity/entities/activity.entity';
 
 @Entity('checkpoints')
 export class Checkpoint {
@@ -32,4 +34,7 @@ export class Checkpoint {
   })
   @JoinColumn({ name: 'itineraryId' })
   itinerary: Itinerary;
+  @OneToMany(()=>(Activity),(Activity)=>Activity.checkpoint)
+  activities:Activity[]
+
 }

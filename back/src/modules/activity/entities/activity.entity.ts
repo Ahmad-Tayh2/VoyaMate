@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Checkpoint } from "./Checkpoints.entity";
+import { Checkpoint } from "src/modules/checkpoint/checkpoint.entity";
 @Entity('activities')
 export class Activity {
 

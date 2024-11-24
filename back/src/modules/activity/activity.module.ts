@@ -3,9 +3,9 @@ import { ActivityService } from './activity.service';
 import { ActivityController } from './activity.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Activity } from './entities/activity.entity';
-import { Checkpoint } from './entities/Checkpoints.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { FileStorageService } from 'src/helper/FileStorageservice';
+import { Checkpoint } from '../checkpoint/checkpoint.entity';
 @Module({
   imports:[TypeOrmModule.forFeature([Checkpoint,Activity]),
   MulterModule.register({

@@ -21,7 +21,7 @@ export class ActivityController {
   }
 
   @Get(':id')
-  async getactivitiebycheckpoint(@Param() id:string):Promise<Activity[]>{
+  async getactivitiebycheckpoint(@Param() id:number):Promise<Activity[]>{
    return await  this.activityService.getactivity(id)
   }
 

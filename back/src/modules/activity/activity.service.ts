@@ -8,12 +8,12 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, QueryBuilder, Repository } from 'typeorm';
 import { Activity } from './entities/activity.entity';
-import { Checkpoint } from './entities/Checkpoints.entity';
 import { FileStorageService } from 'src/helper/FileStorageservice';
 import { response } from './activity.model';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { error } from 'console';
 import { paginate } from 'src/helper/Paginate';
+import { Checkpoint } from '../checkpoint/checkpoint.entity';
 
 @Injectable()
 export class ActivityService {
@@ -31,11 +31,11 @@ export class ActivityService {
   ): Promise<response> {
     try {
       // Vérification de l'existence du checkpoint
-      const checkpointId = createActivityDto.checkpointId.replace(/"/g, '').trim();
+      const checkpointId = createActivityDto.checkpointId;
       console.log('Vérification du checkpoint avec ID:', checkpointId);
 
       const checkVerified = await this.checkpointRepository.findOne({
-        where: { checkpointid: checkpointId },
+        where: { id: checkpointId },
       });
 
       if (!checkVerified) {
@@ -100,9 +100,9 @@ export class ActivityService {
     }
   }
 
-  async getactivity(id:string) :Promise<Activity[]>{
+  async getactivity(id:number) :Promise<Activity[]>{
     const checkpoint = await this.checkpointRepository.findOne({
-      where: { checkpointid: id },
+      where: { id: id },
       relations: ['activities'],  
     });
     if (!checkpoint) {
@@ -133,10 +133,10 @@ export class ActivityService {
     }
 
     //  si le checkpointId est différent
-    if (checkpointId && activity.checkpoint.checkpointid !== checkpointId) {
+    if (checkpointId && activity.checkpoint.id !== checkpointId) {
 
       const checkpoint = await this.checkpointRepository.findOne({
-        where: { checkpointid: checkpointId },
+        where: { id: checkpointId },
       });
 
       if (!checkpoint) {

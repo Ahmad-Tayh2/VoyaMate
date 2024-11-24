@@ -2,3 +2,6 @@
 @import "~bootstrap";
 @import "~bootstrap-icons";
 @import "ngx-toastr/toastr";
+@import "leaflet";
+@import "~leaflet-control-geocoder/dist/Control.Geocoder.css";
+@import "~leaflet-routing-machine/dist/leaflet-routing-machine.css";

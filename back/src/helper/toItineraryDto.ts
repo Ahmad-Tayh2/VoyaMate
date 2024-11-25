@@ -1,4 +1,4 @@
-import { ItineraryResponseDto } from "src/modules/itinerary/dtos/itinerary-response.dto";
+import { ItineraryResponseDto } from "src/modules/itinerary/dtos/itinerary.response.dto";
 import { Itinerary } from "src/modules/itinerary/itinerary.entity";
 
 export function transformItineraryToDto(itinerary: Itinerary):ItineraryResponseDto {

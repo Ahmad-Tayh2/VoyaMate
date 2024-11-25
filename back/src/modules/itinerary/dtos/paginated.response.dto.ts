@@ -1,6 +1,6 @@
 import { IsNumber, IsObject, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ItineraryResponseDto } from './itinerary-response.dto';
+import { ItineraryResponseDto } from './itinerary.response.dto';
 
 
 class MetadataDto {

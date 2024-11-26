@@ -3,13 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Checkpoint } from './checkpoint.entity';
 import { CheckpointService } from './checkpoint.service';
 import { CheckpointController } from './checkpoint.controller';
-import { Itinerary } from '../itinerary/itinerary.entity';
-import { Activity } from '../activity/entities/activity.entity';
+import { ItineraryModule } from '../itinerary/itinerary.module';
 
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Checkpoint,Itinerary,Activity])],
+  imports: [TypeOrmModule.forFeature([Checkpoint]),ItineraryModule],
 
   controllers: [CheckpointController],
   providers: [CheckpointService],

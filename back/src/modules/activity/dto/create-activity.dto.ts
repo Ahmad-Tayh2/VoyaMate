@@ -8,6 +8,6 @@ export class CreateActivityDto {
 
     description:string
     @IsString()
-    checkpointId: number;//est ce que bch trecupereha mel requete wele kifeh??
+    checkpointId: number;
 
 }

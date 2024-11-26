@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsDateString,
-  IsDecimal,
-  IsNotEmpty,
-  IsNumber,
-} from 'class-validator';
+import { IsBoolean, IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateCheckpointDto {
   @IsNumber()

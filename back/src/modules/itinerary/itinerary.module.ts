@@ -3,10 +3,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Itinerary } from './itinerary.entity';
 import { ItineraryService } from './itinerary.service';
-import { ItineraryController } from './test/itinerary.controller';
+import { ItineraryController } from './itinerary.controller';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Itinerary]),UserModule],
+    imports: [TypeOrmModule.forFeature([Itinerary]),UserModule,AuthModule],
     providers: [ItineraryService],
     exports: [ItineraryService],
     controllers: [ItineraryController]

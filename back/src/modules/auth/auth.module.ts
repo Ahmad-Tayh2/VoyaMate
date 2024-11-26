@@ -22,5 +22,6 @@ import { MailService } from './mailService/mail.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, MailService],
+  exports: [AuthService]
 })
 export class AuthModule {}

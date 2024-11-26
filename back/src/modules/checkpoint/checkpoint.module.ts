@@ -6,8 +6,11 @@ import { CheckpointController } from './checkpoint.controller';
 import { Itinerary } from '../itinerary/itinerary.entity';
 import { Activity } from '../activity/entities/activity.entity';
 
+
+
 @Module({
   imports: [TypeOrmModule.forFeature([Checkpoint,Itinerary,Activity])],
+
   controllers: [CheckpointController],
   providers: [CheckpointService],
 })

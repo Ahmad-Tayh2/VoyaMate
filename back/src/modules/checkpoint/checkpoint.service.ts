@@ -9,22 +9,21 @@ import { Repository } from 'typeorm';
 import { Checkpoint } from './checkpoint.entity';
 import { CreateCheckpointDto } from './dto/create-checkpoint.dto';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
-import { Itinerary } from '../itinerary/itinerary.entity';
+import { ItineraryService } from '../itinerary/itinerary.service';
 
 @Injectable()
 export class CheckpointService {
   constructor(
     @InjectRepository(Checkpoint)
     private readonly checkpointRepository: Repository<Checkpoint>,
-    @InjectRepository(Itinerary)
-    private readonly itineraryRepository: Repository<Itinerary>,
+    private itineraryServise: ItineraryService,
   ) {}
 
   async create(dto: CreateCheckpointDto): Promise<Checkpoint> {
     try {
-      const itinerary = await this.itineraryRepository.findOne({
-        where: { id: dto.itineraryId },
-      });
+      const itinerary = await this.itineraryServise.findItineraryById(
+        dto.itineraryId,
+      );
 
       if (!itinerary) {
         throw new NotFoundException(`Itinerary with not found.`);

@@ -11,6 +11,8 @@ import { MailService } from './modules/auth/mailService/mail.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ActivityModule } from './modules/activity/activity.module';
 import { ItineraryModule } from './modules/itinerary/itinerary.module';
+import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
+
 
 
 
@@ -31,7 +33,7 @@ import { ItineraryModule } from './modules/itinerary/itinerary.module';
           username: configService.get<string>('DB_USERNAME'),
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_DATABASE'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],//autoLoadEntities: true,
+          entities: [__dirname + '/**/*.entity{.ts,.js}'], //autoLoadEntities: true,
           synchronize: true,
           logging:true,
         };
@@ -40,10 +42,10 @@ import { ItineraryModule } from './modules/itinerary/itinerary.module';
     UserModule,
     AuthModule,
     JwtModule,
+    ItineraryModule,
+    CheckpointModule,
+    ActivityModule
 
-    ActivityModule,
-
-    ItineraryModule
 
   ],
   controllers: [AppController, AuthController],

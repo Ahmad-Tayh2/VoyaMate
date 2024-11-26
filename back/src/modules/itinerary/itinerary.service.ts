@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
@@ -29,9 +29,17 @@ export class ItineraryService {
             budget: itineraryDTO.budget,
             owner: user
         })
+        try {
         const itinerary= await this.repository.save(newItinerary)
         return transformItineraryToDto(itinerary)
+        }
+        catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') { 
+            throw new HttpException('Itinerary name already exists', HttpStatus.CONFLICT);
+        }
+        throw new HttpException('Error while creating itinerary', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
     
     //update name or desscription or budget
     async updateItinerary(itineraryId:number,data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto> {

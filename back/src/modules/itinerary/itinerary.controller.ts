@@ -15,7 +15,7 @@ import { AuthService } from '../auth/auth.service';
 
 
 
-@Controller('/api/itinerary')
+@Controller('itinerary')
 @UseGuards(JwtAuthGuard,IsVerifiedGuard)
 export class ItineraryController {
     constructor(
@@ -25,25 +25,32 @@ export class ItineraryController {
     ) 
     {}
 
-    @Post("/create")
+    @Post()
     async createItinerary(@Request() req, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
         return await this.itineraryService.createItinerary(req.user.userId, data);        
     }
 
-    @Get("/get/:id")
+    @Get()
+    async getItinerariesbyFilter(@Query() query:FilterItinerariesDto): Promise<PaginatedResponseDto> {
+        return await this.itineraryService.getItinerariesByFilter(query);
+    }
+
+    @Get(":id")
     async getItineraryById(@Param('id') itinraryId:number): Promise<ItineraryResponseDto> {
         return await this.itineraryService.findItineraryById(itinraryId);
     }
 
     @UseGuards(IsOwnerGuard)
-    @Delete("/delete/:id")
-    async deleteItinerary(@Param('id') itinraryId:number): Promise<ApiResponse<null>>{      
-        return await this.itineraryService.deleteItinerary(itinraryId);
+    @Patch(":id")
+    async updateItinerary(@Param('id') itineraryId:number, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
+        return await this.itineraryService.updateItinerary(itineraryId, data)
+
     }
 
-    @Get("/filter")
-    async getItinerariesbyFilter(@Query() query:FilterItinerariesDto): Promise<PaginatedResponseDto> {
-        return await this.itineraryService.getItinerariesByFilter(query);
+    @UseGuards(IsOwnerGuard)
+    @Delete(":id")
+    async deleteItinerary(@Param('id') itinraryId:number): Promise<ApiResponse<null>>{      
+        return await this.itineraryService.deleteItinerary(itinraryId);
     }
 
     @UseGuards(IsOwnerGuard)
@@ -55,8 +62,8 @@ export class ItineraryController {
         }
         try{
             const token=this.authService.generateToken({
-                memberId:data.memberId,
-                itineraryId
+                userId:data.memberId,
+                itineraryId:itineraryId
             },"1h")
 
             await this.mailService.sendConfirmationMail(senMailObject,token);
@@ -69,13 +76,12 @@ export class ItineraryController {
         }
    }
 
-
    @Get("/confirm-member")
     async confirmMember(@Query("token") token: string): Promise<ApiResponse<null>> {
          try {
               const payload=await this.authService.verifyToken(token)
               {
-                return await this.itineraryService.addMember(payload.itineraryId,payload.memberId)
+                return await this.itineraryService.addMember(payload.itineraryId,payload.userId)
               }
          } catch (err) {
               console.error("Error while confirming user email",err)
@@ -87,12 +93,5 @@ export class ItineraryController {
                 HttpStatus.INTERNAL_SERVER_ERROR
               );
          }
-        }
-
-        @UseGuards(IsOwnerGuard)
-        @Patch("/update/:id")
-        async updateItinerary(@Param('id') itineraryId:number, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
-            return await this.itineraryService.updateItinerary(itineraryId, data)
-    
         }
 }

@@ -1,5 +1,3 @@
-import { Itinerary } from './../itinerary/itinerary.entity';
-import { JwtSignOptions } from './../../../node_modules/@nestjs/jwt/dist/interfaces/jwt-module-options.interface.d';
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -7,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { AddUserDTO } from './dtos/add-user.dto';
+import { PayloadDto} from './dtos/token.payload.dto';
 
 @Injectable()
 export class AuthService {
@@ -56,12 +55,11 @@ export class AuthService {
       } 
 
     //added more generic methods
-    generateToken(payload: Record<string, any>, expirationTime: string): string {
+    generateToken(payload: Partial<PayloadDto>, expirationTime: string): string {
       return this.jwtservice.sign(payload, { secret: this.secret_key, expiresIn: expirationTime });
     } 
-    async verifyToken(token: string):Promise<any>{
+    async verifyToken(token: string):Promise<Partial<PayloadDto>>{
       const decoded = this.jwtservice.verify(token, { secret:this.secret_key });
-      console.log(decoded)
       return decoded
     }
 

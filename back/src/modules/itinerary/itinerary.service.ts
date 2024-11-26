@@ -9,6 +9,7 @@ import { ItineraryResponseDto } from './dtos/itinerary.response.dto';
 import { PaginatedResponseDto } from './dtos/paginated.response.dto';
 import { transformItineraryToDto } from 'src/helper/toItineraryDto';
 import { ApiResponse } from '../../shared/interfaces/response.interface';
+import { FilterItinerariesDto } from './dtos/filter.itineraries.dto';
 
 
 @Injectable()
@@ -57,7 +58,7 @@ export class ItineraryService {
         return itinerary.map(itinerary =>transformItineraryToDto(itinerary));
     }
 
-    async getItinerariesByFilter(filter: Record<string,any>): Promise<PaginatedResponseDto> {
+    async getItinerariesByFilter(filter: FilterItinerariesDto): Promise<PaginatedResponseDto> {
         const { page, limit, userId, name, budget } = filter;
 
         let whereConditions: any = {};

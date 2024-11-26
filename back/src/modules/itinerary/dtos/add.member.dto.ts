@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class addMemberDto{
     @IsNumber()
-    memberId:string;
+    memberId:number;
 
     @IsNotEmpty()
     @IsString()

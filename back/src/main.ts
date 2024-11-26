@@ -19,7 +19,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
 
   }));
-  app.setGlobalPrefix("api")
+
   await app.listen(configService.get<string>("BACKEND_PORT") ?? 3000);
 }
 bootstrap();

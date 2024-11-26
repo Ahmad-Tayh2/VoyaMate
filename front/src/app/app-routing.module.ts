@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RegisterComponent } from './modules/auth/register/register.component';
 import { AppComponent } from './app.component';
 import { EmailVerificationComponent } from './modules/auth/email.verification/email.verification.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './modules/home/home.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 
 const routes: Routes = [

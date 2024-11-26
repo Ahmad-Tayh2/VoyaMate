@@ -12,22 +12,25 @@ import { Router } from '@angular/router';
 import { RegisterComponent } from './modules/auth/register/register.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EmailVerificationComponent } from './modules/auth//email.verification/email.verification.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './modules/home/home.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { SearchBoxComponent } from './home/search-box/search-box.component';
+import { SearchBoxComponent } from './modules/home/search-box/search-box.component';
+import { TravelCardComponent } from './modules/home/travel-card/travel-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    TravelCardComponent,
     RegisterComponent,
     EmailVerificationComponent,
     HomeComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    TravelCardComponent
   ],
   imports: [
     BrowserAnimationsModule,

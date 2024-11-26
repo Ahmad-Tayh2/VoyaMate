@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
-import { AddItineraryDTO } from './dtos/add.itinerary.dto';
+import { AddOrUpdateItineraryDTO } from './dtos/add.itinerary.dto';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
+import { ItineraryResponseDto } from './dtos/itinerary.response.dto';
+import { PaginatedResponseDto } from './dtos/paginated.response.dto';
+import { transformItineraryToDto } from 'src/helper/toItineraryDto';
+import { ApiResponse } from '../../shared/interfaces/response.interface';
+import { FilterItinerariesDto } from './dtos/filter.itineraries.dto';
 
-export interface Response {
-    success: boolean;
-    message: string;
-}
 
 @Injectable()
 export class ItineraryService {
@@ -20,41 +21,92 @@ export class ItineraryService {
         private userService : UserService
     ){}
 
-    async createItinerary(itineraryDTO: AddItineraryDTO):Promise<Itinerary> {
-        const user=await this.userService.findUserById(itineraryDTO.owner);
-        if (!user){
-            throw new Error('User not found');
-        }
+    async createItinerary(userId: number, itineraryDTO: AddOrUpdateItineraryDTO):Promise<ItineraryResponseDto> {
+        const user=await this.userService.findUserById(userId);
         const newItinerary=this.repository.create({
             name: itineraryDTO.name,
             description: itineraryDTO.description,
             budget: itineraryDTO.budget,
             owner: user
         })
-        const savedItinerary= await this.repository.save(newItinerary)
-        return savedItinerary;
+        try {
+        const itinerary= await this.repository.save(newItinerary)
+        return transformItineraryToDto(itinerary)
+        }
+        catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') { 
+            throw new HttpException('Itinerary name already exists', HttpStatus.CONFLICT);
+        }
+        throw new HttpException('Error while creating itinerary', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+    
+    //update name or desscription or budget
+    async updateItinerary(itineraryId:number,data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto> {
+        let itinerary = await this.repository.findOne({ where :{id: itineraryId}, relations: ['members', 'owner'] });
+        const newItinerary = { ...itinerary, ...data };
+        const updatedItinerary = await this.repository.save(newItinerary);
+        return transformItineraryToDto(updatedItinerary);
     }
 
-    async updateItinerary(itinerary: Itinerary): Promise<Itinerary> {
-        const updatedItinerary = await this.repository.save(itinerary);
-        return updatedItinerary;
-    }
-
-    async findItineraryById(itineraryId: number): Promise<Itinerary> {
+    async findItineraryById(itineraryId: number): Promise<ItineraryResponseDto> {
         const itinerary = await this.repository.findOne({ where :{id: itineraryId}, relations: ['members', 'owner'] });
-        return itinerary;
+        if (!itinerary){
+            throw new NotFoundException("Itinerary not found")
+        }
+        return transformItineraryToDto(itinerary);
     }
 
-    async getItinerariesByOwnerId(userId:number): Promise<Itinerary[]> {
+    async getItinerariesByOwnerId(userId:number): Promise<ItineraryResponseDto[]> {
         const user=await this.userService.findUserById(userId);
         if (!user){
             throw new Error('User not found');
         }
         const itinerary = await this.repository.find({ where :{owner:{id:userId}} , relations: ['members','owner']});
-        return itinerary;
+        return itinerary.map(itinerary =>transformItineraryToDto(itinerary));
     }
 
-    async deleteItinerary(itineraryId: number): Promise<Response> {
+    async getItinerariesByFilter(filter: FilterItinerariesDto): Promise<PaginatedResponseDto> {
+        const { page, limit, userId, name, budget } = filter;
+
+        let whereConditions: any = {};
+
+        if (userId) {
+            const user = await this.userService.findUserById(filter.userId);
+
+            if (user){
+            whereConditions = { owner: { id:filter.userId } };
+            }
+        }
+
+        if (name){
+            whereConditions.name=filter.name;
+        }
+        if (budget){
+            whereConditions.budget= filter.budget;
+        }
+
+       const  [itineraries,totalElementsNb]=await this.repository.findAndCount({
+         where: whereConditions, relations: ['members','owner'],
+         skip: (page-1)*limit,
+         take: limit
+        })
+
+        const filteredIineraries=itineraries.map( it=>transformItineraryToDto(it))
+        const totalPagesNb = Math.ceil(totalElementsNb / limit);
+        return {
+            data: filteredIineraries,
+            metadata: {
+                totalElementsNb,
+                totalPagesNb,
+                currentPageNb:page,
+                elementsPerPageNb:limit
+            }
+        }
+
+    }
+
+    async deleteItinerary(itineraryId: number): Promise<ApiResponse<null>> {
         const result=await this.repository.delete(itineraryId);
         if (result.affected===0){
             return { success: false, message:'Itinerary not found'};
@@ -62,25 +114,19 @@ export class ItineraryService {
         return {success:true, message:'Itinerary deleted successfully'};
     }
 
-    async addMember(itineraryId: number, userId: number): Promise<Response> {
-        const itinerary : Itinerary= await this.findItineraryById(itineraryId);
-        if (!itinerary){
-            throw new Error('Itinerary not found');
-        }
-        const user: User = await this.userService.findUserById(userId);
-        if (!user) {
-          throw new Error('User not found');
-        }
-        console.log("itinerary owner id:",itinerary);        
+    async addMember(itineraryId: number, memberId: number): Promise<ApiResponse<null>> {
+        const itinerary = await this.repository.findOne({ where :{id: itineraryId}, relations: ['members', 'owner'] });
+        const user: User = await this.userService.findUserById(memberId);
+       
         if (!itinerary.members.some(member => member.id === user.id) && itinerary.owner.id !== user.id && !user.memberItineraries?.some(memberItinerary => memberItinerary.id === itinerary.id)) {
             itinerary.members.push(user);
             user.memberItineraries.push(itinerary);
             
-            await this.updateItinerary(itinerary);
+            await this.repository.save(itinerary);
             await this.userService.updateUser(user);
 
           } else {
-            return {success: false ,message:"The user is already a member or is an owner." }
+            return {success: false ,message:"The user is already a member or an owner." }
           }
         return {success: true,message:"Member added successfully to the itinerary" }
     }

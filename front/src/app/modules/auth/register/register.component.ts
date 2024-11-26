@@ -28,7 +28,7 @@ export class RegisterComponent implements OnInit{
       username: ['', [Validators.required, Validators.minLength(6)]],
       countryCode: ['+1', Validators.required],
       phone: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)]],
       acceptTerms : [false,[Validators.requiredTrue]]
     });
   }
@@ -37,11 +37,10 @@ export class RegisterComponent implements OnInit{
     try{
       this.countrycodeService.getAllCodes().subscribe((data)=>{
         data.filter((value)=> value.idd && value.idd.root)
+        
         .map((value)=> this.countryCodes.push(new CountryCode(value.name.common,value.idd.root + value.idd.suffixes.at(0))))
       })
-
-
-      console.log(this.countryCodes)
+     
     }catch(e){
        console.log(e)
     }
@@ -58,12 +57,13 @@ export class RegisterComponent implements OnInit{
         this.authService.register(new Register(form.email,form.password,form.username,form.phone)).subscribe(
           (result) =>{
           this.toastr.success(`Email verification is sent to ${this.registerForm.value.email}.`,'Success')
-          this.router.navigate([''])
+          this.router.navigate(['/login'])
 
 
         },
       (error) => {
-        this.toastr.error(error.message,'Error')
+        console.log(error)
+        this.toastr.error(error.error.message,'Error')
 
       })
       this.loading = false;
@@ -80,7 +80,11 @@ export class RegisterComponent implements OnInit{
   }
 
   checkInputState(name : string):boolean | undefined{
-    return this.registerForm.get(name)?.value.length < 8  && this.registerForm.get(name)?.touched;
+    return !this.registerForm.get(name)?.valid  && this.registerForm.get(name)?.touched;
+  }
+  checkPassword(){
+
+    return !(!this.registerForm.get('password')?.valid && this.registerForm.get('password')?.touched)
   }
 
 

@@ -4,7 +4,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToMany,
 } from 'typeorm';
+import { Itinerary } from '../itinerary/itinerary.entity';
+import { Exclude } from 'class-transformer';
+
 
 @Entity('users')
 export class User {
@@ -20,13 +25,20 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column()
   phone: string;
+
+  @OneToMany(()=>Itinerary, (itinerary)=>itinerary.owner)
+  ownerItIneraries: Itinerary[];
+
+  @ManyToMany(()=>Itinerary, (itinerary)=>itinerary.members)
+  @Exclude() 
+  memberItineraries: Itinerary[];
 
   @Column({ type: 'timestamp', nullable: true })
   verifiedAt: Date | null;
 
-  @CreateDateColumn({ type: 'timestamp' })//unique=false
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })

@@ -53,10 +53,10 @@
             class="form-control" 
             placeholder="Password" 
             formControlName="password" 
-            [ngClass]="{'is-invalid': checkInputState('password')}" 
+            [ngClass]="{'is-invalid': !checkPassword()}" 
             required />
-          <div *ngIf="checkInputState('password')" class="text-danger">
-            Password must be at least 8 characters.
+          <div *ngIf="!checkPassword()" class="text-danger">
+            Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.
           </div>
         </div>
 

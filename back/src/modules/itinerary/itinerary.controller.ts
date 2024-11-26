@@ -12,7 +12,7 @@ import { IsVerifiedGuard } from './guards/is-verified.guard';
 import { FilterItinerariesDto } from './dtos/filter.itineraries.dto';
 import { addMemberDto } from './dtos/add.member.dto';
 import { AuthService } from '../auth/auth.service';
-
+import { CurrentUser } from './decorators/current-user.decorator';
 
 
 @Controller('itinerary')
@@ -26,8 +26,8 @@ export class ItineraryController {
     {}
 
     @Post()
-    async createItinerary(@Request() req, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
-        return await this.itineraryService.createItinerary(req.user.userId, data);        
+    async createItinerary(@CurrentUser() user, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
+        return await this.itineraryService.createItinerary(user.userId, data);        
     }
 
     @Get()

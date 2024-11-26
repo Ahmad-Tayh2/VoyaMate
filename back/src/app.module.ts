@@ -9,8 +9,13 @@ import { AuthController } from './modules/auth/auth.controller';
 import { AuthService } from './modules/auth/auth.service';
 import { MailService } from './modules/auth/mailService/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ActivityModule } from './modules/activity/activity.module';
 import { ItineraryModule } from './modules/itinerary/itinerary.module';
 import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
+
+
+
+
 
 @Module({
   imports: [
@@ -30,6 +35,7 @@ import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'], //autoLoadEntities: true,
           synchronize: true,
+          logging:true,
         };
       },
     }),
@@ -38,6 +44,9 @@ import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
     JwtModule,
     ItineraryModule,
     CheckpointModule,
+    ActivityModule
+
+
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, MailService],

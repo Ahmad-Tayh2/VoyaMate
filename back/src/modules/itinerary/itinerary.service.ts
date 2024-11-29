@@ -45,6 +45,9 @@ export class ItineraryService {
     //update name or desscription or budget
     async updateItinerary(itineraryId:number,data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto> {
         let itinerary = await this.repository.findOne({ where :{id: itineraryId}, relations: ['members', 'owner'] });
+        if (!itinerary){
+            throw new NotFoundException("Itinerary not found")
+        }
         const newItinerary = { ...itinerary, ...data };
         const updatedItinerary = await this.repository.save(newItinerary);
         return transformItineraryToDto(updatedItinerary);

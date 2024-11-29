@@ -50,8 +50,8 @@ export class AuthController {
             );
         }
     }
-    
     @UseGuards(JwtAuthGuard)
+
     @Get("/verify-email")
     async verifyEmail(@Request() req): Promise<ApiResponse<null>>{
         const sendMailObject: AccountConfirmationMail = {
@@ -67,7 +67,6 @@ export class AuthController {
             message:"Verification Email sent successfully!",
         };
     }
-    @UseGuards(JwtAuthGuard)
     @Get("/confirm-email")
     async confirmUser(@Query("token") token: string): Promise<ApiResponse<null>> {
         try {

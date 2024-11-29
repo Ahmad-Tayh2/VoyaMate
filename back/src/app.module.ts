@@ -12,8 +12,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { ActivityModule } from './modules/activity/activity.module';
 import { ItineraryModule } from './modules/itinerary/itinerary.module';
 import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
-import { ItineraryService } from './modules/itinerary/itinerary.service';
-import { UserService } from './modules/user/user.service';
 
 
 
@@ -44,13 +42,13 @@ import { UserService } from './modules/user/user.service';
     UserModule,
     AuthModule,
     JwtModule,
+    ItineraryModule,
     CheckpointModule,
     ActivityModule
 
 
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService, MailService, ItineraryService,UserService
-  ],
+  providers: [AppService, AuthService, MailService],
 })
 export class AppModule {}

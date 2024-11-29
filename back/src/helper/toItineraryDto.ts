@@ -9,6 +9,7 @@ export function transformItineraryToDto(itinerary: Itinerary):ItineraryResponseD
         budget: itinerary.budget,
         ownerId: itinerary.owner?.id,
         membersIds: itinerary.members?.map(m => m.id) || [],
+        checkpointsIds: itinerary.checkpoints?.map(c => c.id) || [],
     };
 }
 

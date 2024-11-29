@@ -1,3 +1,4 @@
+import { Checkpoint } from './../checkpoint/checkpoint.entity';
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -62,12 +63,12 @@ export class ItineraryService {
         if (!user){
             throw new Error('User not found');
         }
-        const itinerary = await this.repository.find({ where :{owner:{id:userId}} , relations: ['members','owner']});
+        const itinerary = await this.repository.find({ where :{owner:{id:userId}} , relations: ['members','owner',"checkpoints"]});
         return itinerary.map(itinerary =>transformItineraryToDto(itinerary));
     }
 
     async getItinerariesByFilter(filter: FilterItinerariesDto): Promise<PaginatedResponseDto> {
-        const { page, limit, userId, name, budget } = filter;
+        const { page, limit, userId, name, budget, checkedOnly } = filter;
 
         let whereConditions: any = {};
 
@@ -86,11 +87,27 @@ export class ItineraryService {
             whereConditions.budget= filter.budget;
         }
 
-       const  [itineraries,totalElementsNb]=await this.repository.findAndCount({
-         where: whereConditions, relations: ['members','owner'],
-         skip: (page-1)*limit,
-         take: limit
-        })
+        const queryBuilder = this.repository.createQueryBuilder('itinerary')
+            .innerJoinAndSelect('itinerary.checkpoints', 'checkpoints')
+            .where(whereConditions);
+
+        if (checkedOnly) {
+            queryBuilder.andWhere(qb => {
+                const subQuery = qb.subQuery()
+                    .select('COUNT(*)')
+                    .from('checkpoints', 'cp')
+                    .where('cp.itineraryId = itinerary.id')
+                    .andWhere('cp.checked = 0')
+                    .getQuery();
+                return `(${subQuery}) = 0`; 
+            });
+        }
+
+        const [itineraries, totalElementsNb] = await queryBuilder
+                .skip((page - 1) * limit)
+                .take(limit)
+                .getManyAndCount();
+
 
         const filteredIineraries=itineraries.map( it=>transformItineraryToDto(it))
         const totalPagesNb = Math.ceil(totalElementsNb / limit);

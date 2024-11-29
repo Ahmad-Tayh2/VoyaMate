@@ -23,4 +23,8 @@ export class ItineraryResponseDto {
   @IsArray()
   @IsNumber({}, { each: true })
   membersIds: number[];
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  checkpointsIds: number[];
 }

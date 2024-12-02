@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -33,6 +34,7 @@ import { TravelCardComponent } from './modules/home/travel-card/travel-card.comp
     TravelCardComponent
   ],
   imports: [
+    NgxPaginationModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatChipsModule,

@@ -93,4 +93,18 @@
   .background-images {
     padding-top: 70px; /* Ensure the navbar doesn't overlap with content */
   }
+  .pagination {
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+
+  }
+  
+  .pagination button.active {
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+  }
   

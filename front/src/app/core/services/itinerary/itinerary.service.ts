@@ -8,4 +8,5 @@ export class ItineraryService {
 
   http = inject(HttpClient);
   constructor() { }
+
 }

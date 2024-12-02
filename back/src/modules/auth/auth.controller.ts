@@ -23,6 +23,8 @@ export class AuthController {
 
     ) {}
 
+
+    //register + sending verification email
     @Post("/register")
     async registerUser(@Body() AddUserDTO: AddUserDTO): Promise<ApiResponse<null>> {
         try { 
@@ -50,6 +52,10 @@ export class AuthController {
             );
         }
     }
+    
+
+
+    //for testing purposes
     @UseGuards(JwtAuthGuard)
 
     @Get("/verify-email")
@@ -67,6 +73,8 @@ export class AuthController {
             message:"Verification Email sent successfully!",
         };
     }
+
+    //the front end will call this endpoint to confirm the email
     @Get("/confirm-email")
     async confirmUser(@Query("token") token: string): Promise<ApiResponse<null>> {
         try {

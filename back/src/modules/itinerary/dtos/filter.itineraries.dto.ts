@@ -1,4 +1,4 @@
-import { IsOptional, IsInt, IsString, Min, Max, IsNumber } from "class-validator";
+import { IsOptional, IsInt, IsString, Min, Max, IsNumber, IsBoolean } from "class-validator";
 import { Transform } from 'class-transformer';
 
 export class FilterItinerariesDto {
@@ -28,4 +28,9 @@ export class FilterItinerariesDto {
   @Transform(({value})=>(value?parseInt(value):null))
   @IsNumber()
   userId:number;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === "true" ? true : value === "false" ? false : value))
+  @IsBoolean()
+  checkedOnly?: boolean = false;
 }

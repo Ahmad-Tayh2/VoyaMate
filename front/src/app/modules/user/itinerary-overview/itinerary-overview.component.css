@@ -1,3 +1,6 @@
+:root{
+  font-family: 'Poppins';
+}
 h1 {
     font-size: 1.8rem;
     margin-bottom: 20px;
@@ -43,16 +46,11 @@ h1 {
     height: 50px;
     border-radius: 50%;
   }
-/* Example styles */
-/* In itinerary-overview.component.css */
-.mwl-calendar-month-view .cal-day-view .cal-day.selected {
-    background-color: #ffcc00; /* Highlight the selected day */
-  }
-  
-  .mwl-calendar-month-view .cal-event {
-    background-color: #ff0000; /* Event color */
-    border-radius: 4px;
-    color: white;
-    padding: 5px;
+  .month-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+
   }
   

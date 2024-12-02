@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -22,8 +22,15 @@ export class UserService {
             password: hashedPassword,
             phone: AddUserDTO.phone,
         });
+         try{
         const savedUser=await this.repository.save(newUser);
         return savedUser;
+         }
+         catch(err){
+          if (err.code === 'ER_DUP_ENTRY') {
+            throw new ConflictException('User with this email or username already exists');
+          }
+         }
     }
 
     async findUserById(userId: number): Promise<User | null> {

@@ -91,18 +91,25 @@ export class ItineraryService {
         }
 
         const queryBuilder = this.repository.createQueryBuilder('itinerary')
-            .innerJoinAndSelect('itinerary.checkpoints', 'checkpoints')
+            .leftJoinAndSelect('itinerary.checkpoints', 'checkpoints')
             .where(whereConditions);
 
         if (checkedOnly) {
             queryBuilder.andWhere(qb => {
-                const subQuery = qb.subQuery()
+                const subQuery1=qb.subQuery()
+                .select("cp.itineraryId")
+                .from(Checkpoint, "cp")
+                .where("cp.itineraryId IS NOT NULL")
+                .getQuery();
+
+                const subQuery2 = qb.subQuery()
                     .select('COUNT(*)')
                     .from('checkpoints', 'cp')
                     .where('cp.itineraryId = itinerary.id')
                     .andWhere('cp.checked = 0')
                     .getQuery();
-                return `(${subQuery}) = 0`; 
+
+                return `itinerary.id IN ${subQuery1} AND (${subQuery2}) = 0`; 
             });
         }
 

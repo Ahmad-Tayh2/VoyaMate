@@ -16,8 +16,9 @@ export class LoginComponent {
   isVisible = false;
   handleSubmit(form: NgForm) {
     this.authService.handleLogin(form.value).subscribe({
-      next: () => {
+      next: (data: any) => {
         this.route.navigate(['/']);
+        this.authService.setToken(data.token);
       },
       error: () => {
         this.toastr.error('Invalid Credentials Please Try Again');

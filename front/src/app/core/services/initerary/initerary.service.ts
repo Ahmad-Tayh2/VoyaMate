@@ -37,7 +37,6 @@ export class IniteraryService {
         .addTo(this.map)
         .bindPopup(place.name);
 
-      // Create a path to the next place if it exists
       if (i < this.places.length - 1) {
         const nextPlace = this.places[i + 1];
         this.createPath(
@@ -85,11 +84,13 @@ export class IniteraryService {
       lineOptions: {
         styles: [{ color: 'blue', opacity: 0.7, weight: 4 }],
       },
-      createMarker: () => null, // Prevent default markers
-      fitSelectedRoutes: false, // Disable auto-fit
-      autoRoute: true, // Allow routing without affecting map view
+      createMarker: () => null,
+      fitSelectedRoutes: false,
+      autoRoute: true,
+      show: false,
     }).addTo(this.map);
   };
+
   setPlaces(places: { name: string; lat: number; lon: number }[]) {
     this.places = places;
   }

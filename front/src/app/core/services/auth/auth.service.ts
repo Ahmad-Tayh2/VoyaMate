@@ -19,4 +19,12 @@ export class AuthService {
   resetPassword(token: string, password: string) {
     return this.http.post(APP_API.resetPassword + token, password);
   }
+
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('access_token', token);
+  }
 }

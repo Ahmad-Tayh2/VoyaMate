@@ -1,4 +1,5 @@
-<div class="main-content">
+<div  class="main-content row">
+  <div  class="itineraries-section col-sm">
     <h1>My Itineraries</h1>
     <div class="filter">
       <label for="filter-dropdown">Status</label>
@@ -7,20 +8,32 @@
       </select>
     </div>
     <div class="itineraries">
-      <div *ngFor="let itinerary of itineraries" 
-      class="card" 
-      [ngClass]="{'selected': selectedCard === itinerary}" 
-      (click)="selectCard(itinerary)">
+      <div
+        *ngFor="let itinerary of itineraries"
+        class="card"
+        [ngClass]="{ 'selected': selectedCard === itinerary }"
+        (click)="selectCard(itinerary)"
+      >
         <img [src]="itinerary.image" [alt]="itinerary.title" class="card-img" />
-        <div class="card-details" >
+        <div class="card-details">
           <h3>{{ itinerary.title }}</h3>
           <div class="info d-flex justify-content-center align-items-center">
-            <span class="me-2"> <i class="bi bi-person icon"></i> {{ itinerary.user }}</span> 
-            <span class="me-2"> <i class="bi bi-clock"></i> {{ itinerary.days }} Days</span>
+            <span class="me-2">
+              <i class="bi bi-person icon"></i> {{ itinerary.user }}
+            </span>
+            <span class="me-2">
+              <i class="bi bi-clock"></i> {{ itinerary.days }} Days
+            </span>
           </div>
         </div>
-        <button class="card-menu"><i class="bi bi-three-dots-vertical"></i></button>
+        <button class="card-menu">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
       </div>
     </div>
   </div>
-  
+
+  <div  class="col-sm" *ngIf="selectedItinerary">
+    <app-itinerary-overview [itinerary]="selectedItinerary"></app-itinerary-overview>
+  </div>
+</div>

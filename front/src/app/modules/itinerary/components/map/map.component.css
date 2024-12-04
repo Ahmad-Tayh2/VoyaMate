@@ -1,7 +1,3 @@
-.leaflet-top .leaflet-right {
-  display: none !important;
-}
-
 #map {
   width: 900px;
   height: 100%;

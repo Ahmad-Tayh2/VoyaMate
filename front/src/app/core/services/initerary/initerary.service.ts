@@ -8,13 +8,16 @@ import 'leaflet-routing-machine';
 export class IniteraryService {
   constructor() {}
   map: L.Map | undefined;
+  customIcon = L.icon({
+    iconUrl: '../../../../assets/location.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
+  });
   private places!: { name: string; lat: number; lon: number }[];
 
   initMap(): void {
-    this.map = L.map('map').setView(
-      [this.places[0].lat, this.places[0].lon],
-      12
-    );
+    this.map = L.map('map').setView([36.806389, 10.181667], 11);
     L.tileLayer(
       'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
@@ -24,17 +27,35 @@ export class IniteraryService {
     ).addTo(this.map);
 
     //  icon that is placed on the map , still gonna change it later
-    const customIcon = L.icon({
-      iconUrl: '../../../../assets/location.png',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-      popupAnchor: [0, -40],
-    });
 
+    // Add geocoder control
+    (L.Control as any)
+      .geocoder({
+        defaultMarkGeocode: false,
+      })
+      .on('markgeocode', (e: any) => {
+        const lat_long = e.geocode.center;
+        const name = e.geocode.name;
+        this.places.push({ name, lat: lat_long.lat, lon: lat_long.lng });
+        L.marker(lat_long, { icon: this.customIcon })
+          .addTo(this.map!)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+        this.map!.fitBounds(e.geocode.bbox);
+        this.handlaPath();
+      })
+      .addTo(this.map);
+
+    // Add path
+  }
+
+  handlaPath() {
+    console.log('******************');
     for (let i = 0; i < this.places.length; i++) {
       const place = this.places[i];
-      L.marker([place.lat, place.lon], { icon: customIcon })
-        .addTo(this.map)
+      console.log(place);
+      L.marker([place.lat, place.lon], { icon: this.customIcon })
+        .addTo(this.map!)
         .bindPopup(place.name);
 
       if (i < this.places.length - 1) {
@@ -45,28 +66,6 @@ export class IniteraryService {
         );
       }
     }
-
-    // Add geocoder control
-    // (L.Control as any)
-    //   .geocoder({
-    //     defaultMarkGeocode: false,
-    //   })
-    //   .on('markgeocode', (e: any) => {
-    //     const lat_long = e.geocode.center;
-    //     console.log('******', lat_long);
-    //     L.marker(lat_long, { icon: customIcon })
-    //       .addTo(this.map!)
-    //       .bindPopup(e.geocode.name)
-    //       .openPopup();
-    //     this.map!.fitBounds(e.geocode.bbox);
-    //     createPath(
-    //       { lat: lat, lon: lon },
-    //       { lat: lat_long.lat, lon: lat_long.lng }
-    //     );
-    //   })
-    //   .addTo(this.map);
-
-    // Add path
   }
 
   createPath = (

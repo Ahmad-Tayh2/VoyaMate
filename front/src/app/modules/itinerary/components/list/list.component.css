@@ -1,0 +1,21 @@
+.text-orange {
+  color: #ff6700;
+}
+
+.border-orange {
+  border-color: #ff6700;
+}
+
+.list-group-item {
+  border: none;
+  border-left: 4px solid #ff6700;
+  padding: 10px;
+}
+
+.list-group-item:hover {
+  background-color: rgba(255, 103, 0, 0.1);
+}
+
+.schedule-card {
+  background-color: #fff5e6;
+}

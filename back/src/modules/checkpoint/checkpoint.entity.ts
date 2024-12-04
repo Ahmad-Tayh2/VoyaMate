@@ -34,7 +34,6 @@ export class Checkpoint {
   })
   @JoinColumn({ name: 'itineraryId' })
   itinerary: Itinerary;
-  @OneToMany(()=>(Activity),(Activity)=>Activity.checkpoint)
-  activities:Activity[]
-
+  @OneToMany(() => Activity, (Activity) => Activity.checkpoint)
+  activities: Activity[];
 }

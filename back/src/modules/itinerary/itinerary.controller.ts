@@ -50,7 +50,7 @@ export class ItineraryController {
 
     @UseGuards(IsOwnerGuard)
     @Post("/invite-member")
-    async inviteMember(@Body() data:inviteMemberDto, @Param("id") itineraryId:number): Promise<ApiResponse<null>>{
+    async inviteMember(@Body() data:inviteMemberDto): Promise<ApiResponse<null>>{
         const user=await this.userService.findUserById(data.memberId);
         if(!user){
             throw new HttpException("User not found", HttpStatus.NOT_FOUND);
@@ -62,7 +62,7 @@ export class ItineraryController {
         try{
             const token=this.authService.generateToken({
                 userId:data.memberId,
-                itineraryId:itineraryId
+                itineraryId:data.itineraryId
             },"1h")
 
             await this.mailService.sendConfirmationMail(senMailObject,token);

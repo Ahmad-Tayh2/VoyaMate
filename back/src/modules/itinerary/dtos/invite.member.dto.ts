@@ -5,8 +5,9 @@ export class inviteMemberDto{
 
     @IsNotEmpty()
     @IsNumber()
-    itineraryId: string;
+    itineraryId: number;
 
+    @IsNotEmpty()
     @IsNumber()
     memberId:number;
 }

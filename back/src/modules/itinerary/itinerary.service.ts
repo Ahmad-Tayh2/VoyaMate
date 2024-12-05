@@ -71,8 +71,15 @@ export class ItineraryService {
     }
 
     async getItinerariesByFilter(filter: FilterItinerariesDto): Promise<PaginatedResponseDto> {
-        const { page, limit, userId, name, budget, checkedOnly } = filter;
 
+        // filter for status: 'Ongoing'|| 'Completed'|| 'Upcoming';
+        //upcoming means that no checkpoint of the itinerary is checked
+        //completed means all the checkpoints of the itinerary are checked
+        //ongoing means that at least one checkpoint of the itinerary is checked and not all
+        //there are some redundancies but i think its better for clarity
+
+        const { page, limit, userId, name, budget, status } = filter;
+        
         let whereConditions: any = {};
 
         if (userId) {
@@ -94,7 +101,39 @@ export class ItineraryService {
             .leftJoinAndSelect('itinerary.checkpoints', 'checkpoints')
             .where(whereConditions);
 
-        if (checkedOnly) {
+            if (status === 'upcoming') {
+                queryBuilder.andWhere(qb => {
+                    const subQuery1 = qb.subQuery()
+                        .select('COUNT(*)')
+                        .from('checkpoints', 'cp')
+                        .where('cp.itineraryId = itinerary.id')
+                        .andWhere('cp.checked = 1')
+                        .getQuery();
+    
+                    return `(${subQuery1}) = 0`; 
+                });
+            }
+        
+            if (status === 'ongoing') {
+                queryBuilder.andWhere(qb => {
+                    const subQuery2 = qb.subQuery()
+                        .select('COUNT(*)')
+                        .from('checkpoints', 'cp')
+                        .where('cp.itineraryId = itinerary.id')
+                        .andWhere('cp.checked = 1')
+                        .getQuery();
+                    
+                    const subQuery3 = qb.subQuery()
+                            .select('COUNT(*)')
+                            .from('checkpoints', 'cp')
+                            .where('cp.itineraryId = itinerary.id')
+                            .getQuery();
+
+                    return `(${subQuery2}) > 0 and (${subQuery2}) < (${subQuery3})`; 
+                });
+            }
+
+        if (status === 'completed') {
             queryBuilder.andWhere(qb => {
                 const subQuery1=qb.subQuery()
                 .select("cp.itineraryId")
@@ -112,6 +151,7 @@ export class ItineraryService {
                 return `itinerary.id IN ${subQuery1} AND (${subQuery2}) = 0`; 
             });
         }
+
 
         const [itineraries, totalElementsNb] = await queryBuilder
                 .skip((page - 1) * limit)

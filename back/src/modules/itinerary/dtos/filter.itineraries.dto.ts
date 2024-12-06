@@ -1,5 +1,11 @@
-import { IsOptional, IsInt, IsString, Min, Max, IsNumber, IsBoolean } from "class-validator";
+import { IsOptional, IsInt, IsString, Min, Max, IsNumber, IsBoolean, isEnum, IsEnum } from "class-validator";
 import { Transform } from 'class-transformer';
+
+export enum STATUS{
+  UPCOMING='upcoming',
+  COMPLETED='completed',
+  ONGOING='ongoing'
+}
 
 export class FilterItinerariesDto {
   @IsOptional()
@@ -30,7 +36,6 @@ export class FilterItinerariesDto {
   userId:number;
 
   @IsOptional()
-  @Transform(({ value }) => (value === "true" ? true : value === "false" ? false : value))
-  @IsBoolean()
-  checkedOnly?: boolean = false;
+  @IsEnum(STATUS, {message:"Status must be either upcoming, ongoing or completed"})
+  status?:STATUS;
 }

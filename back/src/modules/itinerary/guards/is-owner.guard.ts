@@ -11,9 +11,16 @@ export class IsOwnerGuard implements CanActivate {
   ): Promise<boolean> {
 
     const request=context.switchToHttp().getRequest();
-    const userId=request.user.userId;
-    const itineraryId=request.params.id;
+    const userId=request.user?.userId;
+    if(!userId) {
+      return false;
+    }
 
+    const itineraryId=request.params?.id || request.body?.itineraryId;
+    if(!itineraryId) {
+      return false;
+    }
+   
     const itinerary=await this.itineraryService.findItineraryById(itineraryId);
     if(!itinerary || itinerary.ownerId!==userId){
       return false;

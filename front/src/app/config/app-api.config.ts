@@ -4,3 +4,5 @@ export const APP_API = {
   recoverPassword: `${environment.api}/auth/recover-password`,
   resetPassword: `${environment.api}/auth/reset-password/`,
 };
+
+export const tokenName = 'access_token';

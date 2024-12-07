@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { APP_API } from 'src/app/config/app-api.config';
+import { APP_API, tokenName } from 'src/app/config/app-api.config';
 import { Login } from 'src/app/models/auth/login.model';
 
 @Injectable({
@@ -21,10 +21,10 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem(tokenName);
   }
 
   setToken(token: string) {
-    localStorage.setItem('access_token', token);
+    localStorage.setItem(tokenName, token);
   }
 }

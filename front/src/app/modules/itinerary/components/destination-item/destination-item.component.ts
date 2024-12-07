@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./destination-item.component.css'],
 })
 export class DestinationItemComponent {
-  @Input() place!: { name: string; lat: number; lon: number };
+  @Input() place!: { name: string; lat: number; lon: number; time: string };
   constructor() {
     console.log(this.place);
   }

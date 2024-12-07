@@ -11,8 +11,4 @@ export class UserService {
   }
   http = inject(HttpClient);
   constructor() { }
-
-  getUserById(userId : string){
-    this.http.get(`${APP_API}/${userId}`)
-  }
 }

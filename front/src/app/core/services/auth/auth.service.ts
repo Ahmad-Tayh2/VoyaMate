@@ -25,6 +25,10 @@ export class AuthService {
 
   cacheToken(token : string){
     localStorage.setItem('token',token)}
+
+  getToken():string {
+    return localStorage.getItem('token') ?? ''
+  }
   handleLogin(data: Login) {
     return this.http.post(APP_API.login, data);
   }

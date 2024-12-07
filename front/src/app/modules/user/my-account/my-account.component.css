@@ -1,17 +1,16 @@
 .my-account-container {
     display: flex;
-    height: 100vh; 
+    
   }
   
   .my-account-container app-sidebar {
-    flex: 0 0 270px; 
+    flex: 0 0 280px; 
     height: 100%; 
   }
   
   .my-account-container .content {
-    flex-basis: 30%;
-    max-width: 30%; 
+    display: flex; 
     padding: 20px; 
-    overflow-y: auto; 
+  
   }
   

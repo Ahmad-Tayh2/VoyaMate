@@ -8,18 +8,18 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.enableCors({
-    origin: configService.get<string>("FRONTEND_URL"),
-    methods: 'GET,POST,PUT,DELETE', 
+    origin: configService.get<string>('FRONTEND_URL'),
+    methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization',
-    credentials: true, 
+    credentials: true,
   });
-  app.useGlobalPipes(new ValidationPipe({
-
-      whitelist: true, 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
       forbidNonWhitelisted: true,
-
-  }));
-  app.setGlobalPrefix("api")
-  await app.listen(configService.get<string>("BACKEND_PORT") ?? 3000);
+    }),
+  );
+  app.setGlobalPrefix('api');
+  await app.listen(configService.get<string>('BACKEND_PORT') ?? 3000);
 }
 bootstrap();

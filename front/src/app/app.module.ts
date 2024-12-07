@@ -9,10 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { RegisterComponent } from './modules/auth/register/register.component';
 import { ToastrModule } from 'ngx-toastr';
-import { EmailVerificationComponent } from './modules/auth//email.verification/email.verification.component';
+import { RegisterComponent } from './modules/auth/register/register.component';
+import { EmailVerificationComponent } from './modules/auth/email.verification/email.verification.component';
 import { HomeComponent } from './modules/home/home.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,6 +21,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { SearchBoxComponent } from './modules/home/search-box/search-box.component';
 import { TravelCardComponent } from './modules/home/travel-card/travel-card.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
@@ -30,36 +31,33 @@ import { TravelCardComponent } from './modules/home/travel-card/travel-card.comp
     RegisterComponent,
     EmailVerificationComponent,
     HomeComponent,
-    SearchBoxComponent,
-    TravelCardComponent
+    SearchBoxComponent
   ],
   imports: [
-    NgxPaginationModule,
-    BrowserAnimationsModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+
+    BrowserModule,
     AppRoutingModule,
+    ToastrModule.forRoot({
+      timeOut: 4500,  // Duration the toast will remain visible
+      positionClass: 'toast-top-right',  // Position on the screen
+      preventDuplicates: false,  // Prevent multiple toasts of the same message
+    }),
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxPaginationModule,
     MatChipsModule,
     MatIconModule,
-    BrowserModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    FormsModule,
     HttpClientModule,
-    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
-    
-    ToastrModule.forRoot({
-      timeOut: 4500,  // Duration the toast will remain visible
-      positionClass: 'toast-top-right',  // Position on the screen
-      preventDuplicates: false,  // Prevent multiple toasts of the same message
-    })
   ],
-  providers: [
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

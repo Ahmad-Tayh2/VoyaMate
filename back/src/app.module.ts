@@ -13,10 +13,6 @@ import { ActivityModule } from './modules/activity/activity.module';
 import { ItineraryModule } from './modules/itinerary/itinerary.module';
 import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
 
-
-
-
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,7 +31,7 @@ import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'], //autoLoadEntities: true,
           synchronize: true,
-          logging:true,
+          logging: true,
         };
       },
     }),
@@ -44,9 +40,7 @@ import { CheckpointModule } from './modules/checkpoint/checkpoint.module';
     JwtModule,
     ItineraryModule,
     CheckpointModule,
-    ActivityModule
-
-
+    ActivityModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, MailService],

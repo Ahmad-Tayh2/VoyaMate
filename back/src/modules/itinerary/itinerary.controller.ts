@@ -10,9 +10,10 @@ import { PaginatedResponseDto } from './dtos/paginated.response.dto';
 import { MailService } from '../auth/mailService/mail.service';
 import { IsVerifiedGuard } from './guards/is-verified.guard';
 import { FilterItinerariesDto } from './dtos/filter.itineraries.dto';
-import { addMemberDto } from './dtos/add.member.dto';
 import { AuthService } from '../auth/auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { inviteMemberDto } from './dtos/invite.member.dto';
+import { UserService } from '../user/user.service';
 
 
 @Controller('itinerary')
@@ -21,7 +22,8 @@ export class ItineraryController {
     constructor(
         private readonly itineraryService: ItineraryService,
         private readonly mailService: MailService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly userService: UserService
     ) 
     {}
 
@@ -34,19 +36,12 @@ export class ItineraryController {
     async getItinerariesbyFilter(@Query() query:FilterItinerariesDto): Promise<PaginatedResponseDto> {
         return await this.itineraryService.getItinerariesByFilter(query);
     }
-
-    @Get(":id")
-    async getItineraryById(@Param('id') itinraryId:number): Promise<ItineraryResponseDto> {
-        return await this.itineraryService.findItineraryById(itinraryId);
-    }
-
     @UseGuards(IsOwnerGuard)
     @Patch(":id")
     async updateItinerary(@Param('id') itineraryId:number, @Body() data:AddOrUpdateItineraryDTO): Promise<ItineraryResponseDto>{
         return await this.itineraryService.updateItinerary(itineraryId, data)
 
     }
-
     @UseGuards(IsOwnerGuard)
     @Delete(":id")
     async deleteItinerary(@Param('id') itinraryId:number): Promise<ApiResponse<null>>{      
@@ -54,16 +49,20 @@ export class ItineraryController {
     }
 
     @UseGuards(IsOwnerGuard)
-    @Patch("/invite-member/:id")
-    async inviteMember(@Body() data:addMemberDto, @Param("id") itineraryId:number): Promise<ApiResponse<null>>{
+    @Post("/invite-member")
+    async inviteMember(@Body() data:inviteMemberDto): Promise<ApiResponse<null>>{
+        const user=await this.userService.findUserById(data.memberId);
+        if(!user){
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
         const senMailObject:MemberRequestMail={
             type:"member",
-            to: data.memberEmail,
+            to: user.email,
         }
         try{
             const token=this.authService.generateToken({
                 userId:data.memberId,
-                itineraryId:itineraryId
+                itineraryId:data.itineraryId
             },"1h")
 
             await this.mailService.sendConfirmationMail(senMailObject,token);
@@ -84,14 +83,20 @@ export class ItineraryController {
                 return await this.itineraryService.addMember(payload.itineraryId,payload.userId)
               }
          } catch (err) {
-              console.error("Error while confirming user email",err)
+              console.error("Error while confirming member",err)
               throw new HttpException(
                 {
-                message:"Error while verifying user email",
+                message:"Error while verifying member",
                 errorMessage:err.message || "Unknown error",
                 },
                 HttpStatus.INTERNAL_SERVER_ERROR
               );
          }
         }
+
+    @Get(":id")
+    async getItineraryById(@Param('id') itinraryId:number): Promise<ItineraryResponseDto> {
+        return await this.itineraryService.findItineraryById(itinraryId);
+    }
+    
 }

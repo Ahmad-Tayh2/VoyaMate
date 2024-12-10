@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APP_API } from 'src/app/config/app-api.config';
+import { APP_API, tokenName } from 'src/app/config/app-api.config';
 import { Login } from 'src/app/models/auth/login.model';
 import { Register } from 'src/app/models/register/register.model';
 
@@ -26,9 +26,6 @@ export class AuthService {
   cacheToken(token : string){
     localStorage.setItem('token',token)}
 
-  getToken():string {
-    return localStorage.getItem('token') ?? ''
-  }
   handleLogin(data: Login) {
     return this.http.post(APP_API.login, data);
   }
@@ -37,5 +34,17 @@ export class AuthService {
   }
   resetPassword(token: string, password: string) {
     return this.http.post(APP_API.resetPassword + token, password);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(tokenName);
+  }
+
+  setToken(token: string) {
+    localStorage.setItem(tokenName, token);
+  }
+
+  logout() {
+    localStorage.removeItem(tokenName);
   }
 }

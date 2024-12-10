@@ -10,3 +10,5 @@ export const APP_API = {
   user : `${environment.api}/api/user`,
 
 };
+
+export const tokenName = 'access_token';

@@ -91,6 +91,7 @@ export class ItineraryService {
         }
 
         const queryBuilder = this.repository.createQueryBuilder('itinerary')
+            .leftJoinAndSelect('itinerary.owner', 'owner')
             .innerJoinAndSelect('itinerary.checkpoints', 'checkpoints')
             .where(whereConditions);
 

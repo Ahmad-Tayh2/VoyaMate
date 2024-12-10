@@ -1,5 +1,6 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, inject, NgModule, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
+import { ItineraryService } from 'src/app/core/services/itinerary/itinerary.service';
 
 @Component({
   selector: 'app-search-box',
@@ -11,12 +12,16 @@ export class SearchBoxComponent implements OnInit{
     throw new Error('Method not implemented.');
   } 
 
+  itineraryService = inject(ItineraryService)
   query : string = "";
   suggestions : any[] = [];
   selectedDate : any;
   status : string = "All";
   onDateChange(){}
-  onSearch(){}
+  onSearch(){
+    this.itineraryService.updatename(this.query)
+    this.itineraryService.fetchItinerariesbyData()
+  }
   onSelectSuggestion(s : any){}
   
 }

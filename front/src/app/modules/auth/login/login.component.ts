@@ -18,7 +18,8 @@ export class LoginComponent {
     this.authService.handleLogin(form.value).subscribe({
       next: (data: any) => {
         this.route.navigate(['/']);
-        this.authService.setToken(data.token);
+        console.log(data.access_token)
+        this.authService.setToken(data.access_token);
       },
       error: () => {
         this.toastr.error('Invalid Credentials Please Try Again');

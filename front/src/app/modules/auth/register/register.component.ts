@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { CountrycodeService } from 'src/app/core/services/countryservice/countrycode.service';
 import { CountryCode } from 'src/app/models/coutryCode/countryCode';
 import { Register } from 'src/app/models/register/register.model';
+import { codes } from 'src/app/shared/countryCodes.static';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,6 @@ export class RegisterComponent implements OnInit{
   selectedCountry? : CountryCode;
 
   toastr = inject(ToastrService)
-  countrycodeService = inject(CountrycodeService);
   router = inject(Router);
   authService = inject(AuthService)
   loading : boolean = false;
@@ -35,11 +35,7 @@ export class RegisterComponent implements OnInit{
   ngOnInit() {
 
     try{
-      this.countrycodeService.getAllCodes().subscribe((data)=>{
-        data.filter((value)=> value.idd && value.idd.root)
-        
-        .map((value)=> this.countryCodes.push(new CountryCode(value.name.common,value.idd.root + value.idd.suffixes.at(0))))
-      })
+      codes.map((v)=>this.countryCodes.push(new CountryCode(v.name,v.code)))
      
     }catch(e){
        console.log(e)

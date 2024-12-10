@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CountrycodeService {
-  private apiUrl = 'https://restcountries.com/v3.1/all';
+  private apiUrl = 'https://restcountries.com/v3.1/independent?status=true';
 
   constructor(private http : HttpClient) {
     this.http = http;

@@ -1,0 +1,16 @@
+.my-account-container {
+    display: flex;
+    
+  }
+  
+  .my-account-container app-sidebar {
+    flex: 0 0 280px; 
+    height: 100%; 
+  }
+  
+  .my-account-container .content {
+    display: flex; 
+    padding: 20px; 
+  
+  }
+  

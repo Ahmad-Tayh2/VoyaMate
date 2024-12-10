@@ -1,19 +1,16 @@
 import { ConfigService } from '@nestjs/config';
-import { Body, Controller,Get,HttpException,HttpStatus,Param,Post, Query, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller,Get,HttpException,HttpStatus,Param,Post, Query, UnauthorizedException, UseGuards,Request } from '@nestjs/common';
 import { MailService } from './mailService/mail.service';
 import { AddUserDTO } from './dtos/add-user.dto';
 import { AuthDto } from './dtos/auth.dto';
-import { User } from 'src/modules/user/user.entity';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { ResetPasswordDto } from './dtos/auth.reset.dto';
+import { ForgotPasswordDto, ResetPasswordDto } from './dtos/auth.reset.dto';
+import { AccountConfirmationMail } from 'src/shared/interfaces/email.interface';
+import { ApiResponse } from 'src/shared/interfaces/response.interface';
+import { JwtAuthGuard } from '../auth/GUARD/auth.guard'
 
 
-type Response={
-    message:string;
-    user?:User;
-    errorMessage?:string;
-} 
 
 @Controller('auth')
 export class AuthController {
@@ -26,19 +23,26 @@ export class AuthController {
 
     ) {}
 
-    @Post("/register")
-    async registerUser(@Body() addUserDTO: AddUserDTO): Promise<Response> {
-        try { 
-            const user = await this.signupService.addUser(addUserDTO);
-            await this.mailService.sendVerificationMail(user.id); //this shouldnt be here because its slowing down the registration cron job maybe?
-                        
-            return {
-                message:"User registered successfully",
-                user:user
-            };
-        } catch (err) {
 
-            console.error('Error during user registration:', err);
+    //register + sending verification email
+    @Post("/register")
+    async registerUser(@Body() AddUserDTO: AddUserDTO): Promise<ApiResponse<null>> {
+        try { 
+            const user = await this.signupService.addUser(AddUserDTO);
+            const sendMailObject: AccountConfirmationMail = {
+                type: "account",
+                to: user.email,
+            }
+            const token = this.authservice.generateToken({
+                userId:user.id
+            },"1h");
+            await this.mailService.sendConfirmationMail(sendMailObject,token);          
+            return {
+                success: true,
+                message:"Verification Email sent successfully!",
+            };
+
+        } catch (err) {
             throw new HttpException(
                 {
                 message:"Error while adding user",
@@ -48,12 +52,36 @@ export class AuthController {
             );
         }
     }
-    @Get("/confirm")
-    async confirmUser(@Query("token") token: string, @Query("id") userId:number): Promise<Response> {
+    
+
+
+    //for testing purposes
+    @UseGuards(JwtAuthGuard)
+
+    @Get("/verify-email")
+    async verifyEmail(@Request() req): Promise<ApiResponse<null>>{
+        const sendMailObject: AccountConfirmationMail = {
+            type: "account",
+            to: req.user.email,
+        }
+        const token = this.authservice.generateToken({
+            userId:req.user.id
+        },"1h");
+        await this.mailService.sendConfirmationMail(sendMailObject,token);          
+        return {
+            success: true,
+            message:"Verification Email sent successfully!",
+        };
+    }
+
+    //the front end will call this endpoint to confirm the email
+    @Get("/confirm-email")
+    async confirmUser(@Query("token") token: string): Promise<ApiResponse<null>> {
         try {
-            if (await this.mailService.verifyUserEmail(userId,token))
+            await this.authservice.verifyUserEmail(token)
             {
                 return {
+                    success:true,
                     message:"User email confirmed successfully",
                 }
             }
@@ -71,15 +99,15 @@ export class AuthController {
 
     @Post('login')
         
-    async login(@Body() loginDto:AuthDto){
+    async login(@Body() loginDto:AuthDto):Promise<{ access_token: string }>{
         const user = await this.authservice.validateUser(loginDto.email,loginDto.password);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
         return this.authservice.login(user); 
         }
-    @Post('forgot-password')
-    async forgotPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    @Post('recover-password')
+    async forgotPassword(@Body() resetPasswordDto: ForgotPasswordDto):Promise<{message:string}> {
     const { email } = resetPasswordDto;
 
     const user = await this.userService.findByEmail(email);
@@ -91,9 +119,7 @@ export class AuthController {
     const resetToken = this.authservice.generateResetToken(user);
 
     // Envoyer un e-mail avec le lien de réinitialisation
-    // const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`; 
-     const resetLink=this.configService.get("FRONTEND_URL")+"/auth/reset-password/"+resetToken;
-
+    const resetLink=this.configService.get("FRONTEND_URL")+"/auth/recover-password/"+resetToken;
     await this.mailService.sendResetPasswordEmail(user.email, resetLink);
 
     return { message: 'Check your email for the reset password link' };
@@ -101,7 +127,7 @@ export class AuthController {
 
 
     @Post('reset-password/:token')
-    async resetPassword(@Param('token') token: string, @Body() resetPasswordDto: ResetPasswordDto) {
+    async resetPassword(@Param('token') token: string, @Body() resetPasswordDto: ResetPasswordDto):Promise<{message:string}> {
     // Vérifier le token
     const userId = await this.authservice.verifyResetToken(token);
 

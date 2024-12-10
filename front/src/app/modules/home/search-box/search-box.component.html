@@ -1,0 +1,62 @@
+<div class="container my-5">
+  <div class="d-flex justify-content-center">
+    <!-- Input group with shadow and border radius -->
+    <div class="input-group w-75 w-md-50 w-lg-40 shadow-lg p-3 bg-white rounded-pill">
+      
+      <!-- Search input field -->
+      <input
+        type="text"
+        class="form-control form-control-lg border-0 rounded-pill ps-4 textfield"
+        [(ngModel)]="query"
+        (input)="onSearch()"
+        placeholder="Search for travel itineraries..."
+        aria-label="Search input"
+        [ngClass]="{ 'border-danger': query.length > 0 && suggestions.length === 0 }"
+      />
+  
+      <!-- Dropdown for Ongoing or Finished -->
+      <select
+        class="form-select form-select-sm border-0 rounded-pill ms-3"
+        [(ngModel)]="status"
+        aria-label="Status selection"
+      >
+        <option value="Ongoing">Ongoing</option>
+        <option value="Finished">Finished</option>
+        <option value="All">All</option>
+      </select>
+  
+      <div class="d-flex flex-column justify-content-start">
+        <!-- Start Time Text -->
+        <div class="startTimeText">
+          start time
+        </div>
+        <!-- DateTime Input -->
+        <input
+          type="datetime-local"
+          class="form-control form-control-sm border-0 rounded-pill smaller-datetime ms-3"
+          [(ngModel)]="selectedDate"
+          (change)="onDateChange()"
+          aria-label="Select date and time"
+        />
+      </div>
+  
+      <!-- Search Button -->
+      <button class="search-btn  btn-lg rounded-pill ms-2" (click)="onSearch()">
+        Search <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Suggestions List -->
+  <div *ngIf="suggestions.length > 0" class="position-relative mt-4">
+    <ul class="list-group suggestions-list rounded-pill">
+      <li
+        *ngFor="let suggestion of suggestions"
+        (click)="onSelectSuggestion(suggestion)"
+        class="list-group-item list-group-item-action px-4 py-3 rounded-pill shadow-sm mb-3 bg-white hover-shadow"
+      >
+        {{ suggestion }}
+      </li>
+    </ul>
+  </div>
+</div>

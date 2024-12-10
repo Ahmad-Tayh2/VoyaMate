@@ -1,11 +1,11 @@
-import { JwtSignOptions } from './../../../node_modules/@nestjs/jwt/dist/interfaces/jwt-module-options.interface.d';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { AddUserDTO } from './dtos/add-user.dto';
+import { PayloadDto} from './dtos/token.payload.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +20,8 @@ export class AuthService {
       this.secret_key=this.configService.get<string>('JWT_SECRET_KEY')
     }
 
-    async addUser(addUserDTO: AddUserDTO): Promise<User> {
-        return this.userService.createUser(addUserDTO); 
+    async addUser(AddUserDTO: AddUserDTO): Promise<User> {
+        return this.userService.createUser(AddUserDTO); 
         }
 
     async validateUser(email:string,password:string):Promise<any>{
@@ -36,7 +36,7 @@ export class AuthService {
         const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtservice.sign(payload,{
-        secret: this.secret_key, //added this because it didnt work without specifying the secret key
+        secret: this.secret_key, 
         expiresIn:'1h'
       }),
     };
@@ -52,5 +52,28 @@ export class AuthService {
         } catch (error) {
           return null; 
         }
-      }  
+      } 
+
+    //added more generic methods
+    generateToken(payload: Partial<PayloadDto>, expirationTime: string): string {
+      return this.jwtservice.sign(payload, { secret: this.secret_key, expiresIn: expirationTime });
+    } 
+    async verifyToken(token: string):Promise<Partial<PayloadDto>>{
+      const decoded = this.jwtservice.verify(token, { secret:this.secret_key });
+      return decoded
+    }
+
+    async verifyUserEmail(token:string){
+      try{
+        const { userId } = await this.verifyToken(token);
+        const user= await this.userService.findUserById(userId)
+        user.verifiedAt=new Date();
+        await this.userService.updateUser(user);
+      }
+      catch (error) {
+        console.error(error);
+        throw new HttpException("Invalid or expired email verification token", HttpStatus.UNAUTHORIZED)
+      }      
+  }
+      
 }

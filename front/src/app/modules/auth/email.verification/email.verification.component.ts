@@ -14,18 +14,20 @@ export class EmailVerificationComponent implements OnInit {
   authService = inject(AuthService);
   message : string = "";
   ngOnInit(): void {
-    const id = this.route.snapshot.queryParamMap.get('id');
     const token = this.route.snapshot.queryParamMap.get('token');
-    if(id != undefined && token != undefined && ! isNaN(Number(id))){
-       this.authService.verifyEmail(id,token).subscribe((response) => {
-         if(response.status === 200){
-          this.message = "Email is successfully verified"
+    if(token != undefined ){
+      console.log(token)
+       this.authService.verifyEmail(token).subscribe((response) => {
+        console.log(response)
+         if(response.success){
+        
+        this.message = "User email confirmed successfully"
          }
          else{
-          this.message = "Faield to verify email"
+        this.message = "Failed to verify email"
          }
        })
-
+        
     }
     this.message = "Invalid Request"
   }

@@ -8,7 +8,7 @@ import { IniteraryService } from 'src/app/core/services/initerary/initerary.serv
 })
 export class ItineraryComponent {
   places = [];
-  constructor(private itinerary: IniteraryService) {
+  constructor() {
     // this.itinerary.setPlaces(this.places);
   }
 }

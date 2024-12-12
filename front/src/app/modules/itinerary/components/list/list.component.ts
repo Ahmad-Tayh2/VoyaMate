@@ -10,18 +10,21 @@ import { IniteraryService } from 'src/app/core/services/initerary/initerary.serv
 export class ListComponent implements DoCheck {
   itinerary = inject(IniteraryService);
   places = this.itinerary.getPlaces();
-  pendingPlace = this.itinerary.getPendingPlace();
+  pendingPlace = this.itinerary.getPendingPlace() || undefined;
   time: string = '';
 
   ngDoCheck() {
-    this.pendingPlace = this.itinerary.getPendingPlace(); // Check for updates
+    this.pendingPlace = this.itinerary.getPendingPlace();
   }
 
   confirmPlace() {
     if (this.time) {
       this.itinerary.confirmPlace(this.time);
       this.time = '';
-      this.places = this.itinerary.getPlaces(); // Refresh list
+      this.places = this.itinerary.getPlaces();
     }
+  }
+  cancelPlace() {
+    this.itinerary.cancelPlace();
   }
 }

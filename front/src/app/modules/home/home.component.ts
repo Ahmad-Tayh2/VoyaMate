@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
   
   onPageChange(event: number): void {
     this.page = event
-  
+    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})
   
     this.fetchItineraries(); // Fetch itineraries for the current page
   }

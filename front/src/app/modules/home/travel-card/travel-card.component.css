@@ -7,13 +7,7 @@
     margin: 0; /* Remove any default margin from the card */
   }
   
-  .background-images {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; /* Align content towards the bottom */
-    height: 100vh; /* Full viewport height */
-    padding: 20px;
-  }
+  
   
   .search-container {
     margin-bottom: 20px; /* Add spacing above cards */

@@ -17,8 +17,8 @@ export class LoginComponent {
   handleSubmit(form: NgForm) {
     this.authService.handleLogin(form.value).subscribe({
       next: (data: any) => {
-        this.route.navigate(['/']);
-        this.authService.setToken(data.token);
+        this.route.navigate(['/user/my-account']);
+        this.authService.setToken(data.access_token);
       },
       error: () => {
         this.toastr.error('Invalid Credentials Please Try Again');

@@ -3,4 +3,5 @@ export interface Place {
   lat: number;
   lon: number;
   time: string;
+  images?: File[];
 }

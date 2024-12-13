@@ -1,18 +1,50 @@
-<div class="d-flex align-items-center">
-  <div class="card-body d-flex align-items-center">
-    <div class="text-center me-3" style="min-width: 70px">
-      <p class="mb-0 fw-bold">{{ place.time }}</p>
-      <small class="text-muted">Time to visit</small>
+<div>
+  <div class="d-flex align-items-center">
+    <div class="card-body d-flex align-items-center">
+      <div class="text-center me-3" style="min-width: 70px">
+        <p class="mb-0 fw-bold">{{ place.time }}</p>
+        <small class="text-muted">Time to visit</small>
+      </div>
+      <div class="flex-grow-1">
+        <h6 class="fw-bold mb-1">{{ place.name }}</h6>
+        <p class="text-muted mb-0">
+          Latitude: {{ place.lat }} | Longitude: {{ place.lon }}
+        </p>
+      </div>
     </div>
-    <div class="flex-grow-1">
-      <h6 class="fw-bold mb-1">{{ place.name }}</h6>
-      <p class="text-muted mb-0">
-        Latitude: {{ place.lat }} | Longitude: {{ place.lon }}
-      </p>
+
+    <div class="btn btn-link text-danger" (click)="deletePlace(place)">
+      <i class="bi bi-x-circle"></i>
+    </div>
+  </div>
+  <div
+    *ngFor="let image of place.images"
+    class="border border-gray-300 rounded p-1 me-2 mb-2 d-inline-block"
+  >
+    <div class="d-flex align-items-center justify-content-between">
+      <p class="text-muted mb-0 small me-2">{{ image.name }}</p>
+      <button class="btn btn-link text-danger p-0" (click)="deleteImage(image)">
+        <i class="bi bi-x-circle"></i>
+      </button>
     </div>
   </div>
 
-  <div class="btn btn-link text-danger" (click)="deletePlace(place)">
-    <i class="bi bi-x-circle"></i>
+  <div class="d-flex flex-column align-items-center mb-1">
+    <div class="position-relative">
+      <button
+        class="btn btn-primary btn-sm w-100"
+        (click)="triggerFileInput(fileInput)"
+      >
+        Upload Image
+      </button>
+    </div>
+    <input
+      type="file"
+      #fileInput
+      style="display: none"
+      (change)="onFileSelected($event)"
+      accept="image/*"
+      multiple="true"
+    />
   </div>
 </div>

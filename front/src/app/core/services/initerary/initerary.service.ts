@@ -68,6 +68,24 @@ export class IniteraryService {
     console.log(this.places);
     this.handlaPath();
   }
+  uploadImage(place: Place, images: File[]) {
+    const placeIndex = this.places.indexOf(place);
+    if (placeIndex !== -1) {
+      const existingImages = this.places[placeIndex].images || [];
+      this.places[placeIndex].images = [...existingImages, ...images];
+    }
+  }
+  removeImage(place: Place, image: File) {
+    const placeIndex = this.places.indexOf(place);
+    if (placeIndex !== -1) {
+      const existingImages = this.places[placeIndex].images || [];
+      const imageIndex = existingImages.indexOf(image);
+      if (imageIndex !== -1) {
+        existingImages.splice(imageIndex, 1);
+        this.places[placeIndex].images = existingImages;
+      }
+    }
+  }
 
   handlaPath() {
     this.markers.forEach((marker) => this.map?.removeLayer(marker));

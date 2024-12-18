@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; 
+}
+
+.logo {
+  width: 40px; 
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input, button {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 1em;
+}
+
+button {
+  background-color: #ff6600;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e65c00;
+}
+

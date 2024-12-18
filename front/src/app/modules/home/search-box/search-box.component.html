@@ -8,7 +8,6 @@
         type="text"
         class="form-control form-control-lg border-0 rounded-pill ps-4 textfield"
         [(ngModel)]="query"
-        (input)="onSearch()"
         placeholder="Search for travel itineraries..."
         aria-label="Search input"
         [ngClass]="{ 'border-danger': query.length > 0 && suggestions.length === 0 }"
@@ -16,14 +15,15 @@
   
       <!-- Dropdown for Ongoing or Finished -->
       <select
-        class="form-select form-select-sm border-0 rounded-pill ms-3"
-        [(ngModel)]="status"
-        aria-label="Status selection"
-      >
-        <option value="Ongoing">Ongoing</option>
-        <option value="Finished">Finished</option>
-        <option value="All">All</option>
-      </select>
+      class="form-select form-select-sm border-0 rounded-pill ms-3"
+      [(ngModel)]="status"
+      (change)="onSearch()"
+      aria-label="Status selection"
+    >
+      <option value="ongoing">Ongoing</option>
+      <option value="completed">Finished</option>
+      <option value="upcoming">Upcoming</option>
+    </select>
   
       <div class="d-flex flex-column justify-content-start">
         <!-- Start Time Text -->
@@ -35,7 +35,7 @@
           type="datetime-local"
           class="form-control form-control-sm border-0 rounded-pill smaller-datetime ms-3"
           [(ngModel)]="selectedDate"
-          (change)="onDateChange()"
+          (change)="{}"
           aria-label="Select date and time"
         />
       </div>

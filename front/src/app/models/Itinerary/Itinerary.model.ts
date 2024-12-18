@@ -1,7 +1,7 @@
 import { Checkpoint } from "../checkpoint/checkpoint.model";
   
 export  class Itinerary {
-    id: string;
+    id: number;
     name: string;
     description: string;
     ownerId: number;
@@ -11,7 +11,7 @@ export  class Itinerary {
     budget: number;
 
   
-    constructor(id: string, name: string, description: string,budget : number,ownerId : number , membersIds : number[]) {
+    constructor(id: number, name: string, description: string,budget : number,ownerId : number , membersIds : number[]) {
       this.id = id;
       this.name = name;
       this.description = description;

@@ -16,10 +16,13 @@ export class SearchBoxComponent implements OnInit{
   query : string = "";
   suggestions : any[] = [];
   selectedDate : any;
-  status : string = "All";
-  onDateChange(){}
+  status : string = 'upcoming' ;
+
   onSearch(){
-    this.itineraryService.updatename(this.query)
+  
+    this.itineraryService.updateName(this.query)
+    this.itineraryService.updateStatus(this.status)
+
     this.itineraryService.fetchItinerariesbyData()
   }
   onSelectSuggestion(s : any){}

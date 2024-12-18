@@ -7,7 +7,7 @@ export const APP_API = {
   confirm: `${environment.api}/api/auth/confirm-email`,
   resetPassword: `${environment.api}/api/auth/reset-password/`,
   getItineraries : `${environment.api}/api/itinerary`,
-  user : `${environment.api}/api/user`,
+  user : `${environment.api}/api/users`,
 
 };
 

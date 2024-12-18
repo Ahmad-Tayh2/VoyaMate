@@ -17,8 +17,7 @@ export class LoginComponent {
   handleSubmit(form: NgForm) {
     this.authService.handleLogin(form.value).subscribe({
       next: (data: any) => {
-        this.route.navigate(['/']);
-        console.log(data.access_token)
+        this.route.navigate(['/user/my-account']);
         this.authService.setToken(data.access_token);
       },
       error: () => {

@@ -45,7 +45,7 @@
     <div class="d-flex flex-column align-items-center">
 
       <!-- Pagination Section -->
-      <div class="pagination" style="margin-bottom: 30px;"> 
+      <div class="pagination" style="margin-bottom: 30px;" *ngIf="totalPagesNb >= 2"> 
         <button *ngIf="page > 1" (click)="onPageChange(page - 1)" class="btn btn-light">Previous</button>
         
         <button
@@ -57,7 +57,7 @@
           {{ p }}
         </button>
 
-        <button *ngIf="page < 10" (click)="onPageChange(page + 1)" class="btn btn-light">Next</button>
+        <button *ngIf="page < totalPagesNb " (click)="onPageChange(page + 1)" class="btn btn-light">Next</button>
       </div>
 
       <!-- Travel Cards Section -->

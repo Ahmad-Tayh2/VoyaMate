@@ -89,17 +89,17 @@ export class ItineraryService {
             whereConditions = { owner: { id:filter.userId } };
             }
         }
-
-        if (name){
-            whereConditions.name=filter.name;
-        }
         if (budget){
             whereConditions.budget= filter.budget;
         }
 
         const queryBuilder = this.repository.createQueryBuilder('itinerary')
+            .leftJoinAndSelect('itinerary.owner', 'owner')
             .leftJoinAndSelect('itinerary.checkpoints', 'checkpoints')
             .where(whereConditions);
+        if(name){
+            queryBuilder.andWhere('itinerary.name LIKE :name', { name: `%${name}%` });
+        }
 
             if (status === 'upcoming') {
                 queryBuilder.andWhere(qb => {

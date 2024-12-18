@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   
   itemsPerPage: number = 10;
   totalPages : number[] = [];
+  totalPagesNb : number = 0;
   
   
 
@@ -29,11 +30,15 @@ export class HomeComponent implements OnInit {
   itineraries : Itinerary[] = []
   ngOnInit(): void {
     this.fetchItineraries();
-    for(let i = 1 ; i <= 10;i++){
-      this.totalPages[i] = i;
-    }
+
     this.itinerariesService.data$.subscribe((response)  =>{
       if(response != null && response != undefined){
+
+
+       this.totalPagesNb =  response.metadata.totalPagesNb
+        for(let i = 0 ; i < this.totalPagesNb + 1 ;i++){
+          this.totalPages[i] = i;
+        }
         this.itineraries = response.data
         this.itineraries.forEach((it)=>{
           this.itinerariesService.getItineraryById(it.id).subscribe(respIt => {
@@ -73,8 +78,9 @@ export class HomeComponent implements OnInit {
   onNavClick(v : string){
     switch (v){
       case 'My Account':
-        this.router.navigate(['login'])
+        this.router.navigate(['/user/my-account'])
         return;
+      
     }
   }
 }

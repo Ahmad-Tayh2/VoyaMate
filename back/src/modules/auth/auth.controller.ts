@@ -57,6 +57,7 @@ export class AuthController {
 
     //for testing purposes
     @UseGuards(JwtAuthGuard)
+
     @Get("/verify-email")
     async verifyEmail(@Request() req): Promise<ApiResponse<null>>{
         const sendMailObject: AccountConfirmationMail = {

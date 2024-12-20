@@ -23,10 +23,10 @@ export class Checkpoint {
   @Column({ default: false })
   checked: boolean;
 
-  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  @Column()
   longitude: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  @Column()
   latitude: number;
 
   @ManyToOne(() => Itinerary, (itinerary) => itinerary.checkpoints, {

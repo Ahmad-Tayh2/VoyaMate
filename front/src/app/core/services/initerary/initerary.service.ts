@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import 'leaflet-routing-machine';
+import { APP_API } from 'src/app/config/app-api.config';
 import { Place } from 'src/app/models/itinerary/itinerary.model';
 
 @Injectable({
@@ -22,6 +24,7 @@ export class IniteraryService {
   private pendingPlace!: { name: string; lat: number; lon: number } | undefined;
   private markers: L.Marker[] = [];
   private paths: L.Routing.Control[] = [];
+  http = inject(HttpClient);
 
   initMap(): void {
     this.map = L.map('map').setView([36.806389, 10.181667], 11);
@@ -152,5 +155,9 @@ export class IniteraryService {
     places: { name: string; lat: number; lon: number; time: string }[]
   ) {
     this.places = places;
+  }
+
+  createItinerary() {
+    return this.http.post(APP_API.createItinerary, this.places);
   }
 }

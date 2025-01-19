@@ -3,5 +3,6 @@ export const APP_API = {
   login: `${environment.api}/auth/login`,
   recoverPassword: `${environment.api}/auth/recover-password`,
   resetPassword: `${environment.api}/auth/reset-password/`,
+  createItinerary: `${environment.api}/itinerary/create`,
 };
 export const tokenName = 'access_token';

@@ -1,0 +1,15 @@
+.travel-cards-container {
+    margin-top: 20px; /* Bring it closer to the bottom */
+    padding-bottom: 30px; /* Add spacing at the bottom */
+  }
+  
+  .card {
+    margin: 0; /* Remove any default margin from the card */
+  }
+  
+  
+  
+  .search-container {
+    margin-bottom: 20px; /* Add spacing above cards */
+  }
+  

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APP_API, tokenName, tokenName } from 'src/app/config/app-api.config';
+import { APP_API, tokenName } from 'src/app/config/app-api.config';
 import { Login } from 'src/app/models/auth/login.model';
 import { Register } from 'src/app/models/register/register.model';
 

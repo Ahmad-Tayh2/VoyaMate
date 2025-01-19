@@ -12,4 +12,3 @@ export const APP_API = {
 };
 
 export const tokenName = 'access_token';
-export const tokenName = 'access_token';

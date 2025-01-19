@@ -23,6 +23,7 @@ import { SearchBoxComponent } from './modules/home/search-box/search-box.compone
 import { TravelCardComponent } from './modules/home/travel-card/travel-card.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     RegisterComponent,
     EmailVerificationComponent,
     HomeComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    NotFoundComponent
   ],
   imports: [
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),

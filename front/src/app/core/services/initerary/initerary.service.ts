@@ -4,7 +4,7 @@ import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import 'leaflet-routing-machine';
 import { APP_API } from 'src/app/config/app-api.config';
-import { Place } from 'src/app/models/itinerary/itinerary.model';
+import { Place } from 'src/app/models/place/Places.model';
 
 @Injectable({
   providedIn: 'root',

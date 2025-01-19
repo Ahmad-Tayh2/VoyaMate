@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { IniteraryService } from 'src/app/core/services/initerary/initerary.service';
-import { Place } from 'src/app/models/itinerary/itinerary.model';
+import { Place } from 'src/app/models/place/Places.model';
 
 @Component({
   selector: 'app-destination-item',

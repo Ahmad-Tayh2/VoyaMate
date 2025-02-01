@@ -1,16 +1,12 @@
 <div class="sidebar">
   <div class="profile">
-    <img
-      src="assets/images(4).png"
-      alt="User Avatar"
-      class="avatar"
-    />
+    <img src="assets/images(4).png" alt="User Avatar" class="avatar" />
     <div class="text-container">
       <h4>Weiwei WANG</h4>
       <p>Standard Member</p>
     </div>
   </div>
-  <ul class="menu" >
+  <ul class="menu">
     <li>
       <a routerLink="personal-information" routerLinkActive="active">
         <i class="bi bi-person icon"></i>
@@ -18,7 +14,7 @@
       </a>
     </li>
     <li>
-      <a routerLink="user-itineraries" routerLinkActive="active" >
+      <a routerLink="user-itineraries" routerLinkActive="active">
         <i class="bi bi-map icon"></i>
         <span>My Itineraries</span>
       </a>
@@ -30,7 +26,11 @@
       </a>
     </li>
     <li>
-      <a routerLink="logout" routerLinkActive="active">
+      <a
+        routerLinkActive="active"
+        style="cursor: pointer"
+        (click)="handleLogout()"
+      >
         <i class="bi bi-box-arrow-left icon"></i>
         <span>Logout</span>
       </a>

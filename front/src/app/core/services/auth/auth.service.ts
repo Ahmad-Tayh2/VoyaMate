@@ -1,30 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { APP_API, tokenName } from 'src/app/config/app-api.config';
 import { Login } from 'src/app/models/auth/login.model';
 import { Register } from 'src/app/models/register/register.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   http = inject(HttpClient);
-
+  router = inject(Router);
   constructor() {}
- 
-  register(data : Register):Observable<any>{
-      return this.http.post(APP_API.register,data)
 
+  register(data: Register): Observable<any> {
+    return this.http.post(APP_API.register, data);
   }
 
-  verifyEmail( token : string):Observable<any>{
-    return this.http.get(`${APP_API.confirm}?token=${token}`)
+  verifyEmail(token: string): Observable<any> {
+    return this.http.get(`${APP_API.confirm}?token=${token}`);
   }
 
-  cacheToken(token : string){
-    localStorage.setItem('token',token)}
+  cacheToken(token: string) {
+    localStorage.setItem('token', token);
+  }
 
   handleLogin(data: Login) {
     return this.http.post(APP_API.login, data);
@@ -39,6 +39,9 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem(tokenName);
   }
+  isAuthenticated(): boolean {
+    return localStorage.getItem(tokenName) != null;
+  }
 
   setToken(token: string) {
     localStorage.setItem(tokenName, token);
@@ -46,5 +49,6 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(tokenName);
+    this.router.navigate(['/auth/login']);
   }
 }

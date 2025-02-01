@@ -20,7 +20,6 @@
           We'll help you plan your dream escape.
         </p>
 
-        <!-- Login Form -->
         <form
           #loginForm="ngForm"
           (ngSubmit)="handleSubmit(loginForm)"
@@ -100,7 +99,7 @@
           <p class="text-center">
             Don't have an account?
             <a
-              routerLink="/register"
+              routerLink="/auth/register"
               class="orangeColor text-decoration-none"
               >Sign up!</a
             >

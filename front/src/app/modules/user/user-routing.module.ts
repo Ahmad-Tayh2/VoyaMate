@@ -5,8 +5,8 @@ import { UserItinerariesComponent } from './user-itineraries/user-itineraries.co
 
 const routes: Routes = [
   {
-    path: 'my-account', 
-    component: MyAccountComponent, 
+    path: 'my-account',
+    component: MyAccountComponent,
     children: [
       { path: '', redirectTo: 'user-itineraries', pathMatch: 'full' },
       { path: 'user-itineraries', component: UserItinerariesComponent },
@@ -16,6 +16,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class UserRoutingModule { }
+export class UserRoutingModule {}

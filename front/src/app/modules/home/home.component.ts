@@ -82,6 +82,9 @@ export class HomeComponent implements OnInit {
       case 'Login':
         this.router.navigate(['/auth/login']);
         return;
+      case 'My Itineraries':
+        this.router.navigate(['/itinerary']);
+        return;
     }
   }
 }

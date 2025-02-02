@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { EmailVerificationComponent } from './modules/auth/email.verification/email.verification.component';
 import { HomeComponent } from './modules/home/home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
 
   {
     path: 'auth',
+
     loadChildren: () =>
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
   },
@@ -26,6 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'itinerary',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./modules/itinerary/itinerary.module').then(
         (m) => m.ItineraryModule

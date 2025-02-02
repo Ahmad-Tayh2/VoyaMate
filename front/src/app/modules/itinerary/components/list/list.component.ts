@@ -1,5 +1,7 @@
 // list.component.ts
 import { Component, DoCheck, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { IniteraryService } from 'src/app/core/services/initerary/initerary.service';
 
 @Component({
@@ -9,6 +11,8 @@ import { IniteraryService } from 'src/app/core/services/initerary/initerary.serv
 })
 export class ListComponent implements DoCheck {
   itinerary = inject(IniteraryService);
+  toastr = inject(ToastrService);
+  router = inject(Router);
   places = this.itinerary.getPlaces();
   pendingPlace = this.itinerary.getPendingPlace() || undefined;
   time: string = '';
@@ -42,5 +46,15 @@ export class ListComponent implements DoCheck {
   }
   createItinerary() {
     console.log(this.places);
+    this.itinerary.createItinerary().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.toastr.success('Itinerary created successfully');
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+    this.router.navigate(['/']);
   }
 }

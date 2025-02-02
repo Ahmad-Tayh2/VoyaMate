@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { EmailVerificationComponent } from './modules/auth/email.verification/email.verification.component';
 import { HomeComponent } from './modules/home/home.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,17 @@ const routes: Routes = [
     path: 'user',
     loadChildren: () =>
       import('./modules/user/user.module').then((m) => m.UserModule),
+  },
+  {
+    path: 'itinerary',
+    loadChildren: () =>
+      import('./modules/itinerary/itinerary.module').then(
+        (m) => m.ItineraryModule
+      ),
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
   },
 ];
 

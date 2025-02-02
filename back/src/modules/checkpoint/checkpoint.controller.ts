@@ -24,9 +24,9 @@ export class CheckpointController {
 
   @Get()
   async findAll(
-    @Query('itineraryId', ParseIntPipe) itineraryId: number,
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('itineraryId') itineraryId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
     @Query('checked') checked?: string,
     @Query('plannedTime') plannedTime?: string,
   ) {

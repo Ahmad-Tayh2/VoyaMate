@@ -10,8 +10,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-import { RegisterComponent } from './modules/auth/register/register.component';
-import { EmailVerificationComponent } from './modules/auth/email.verification/email.verification.component';
 import { HomeComponent } from './modules/home/home.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,25 +21,28 @@ import { SearchBoxComponent } from './modules/home/search-box/search-box.compone
 import { TravelCardComponent } from './modules/home/travel-card/travel-card.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TravelCardComponent,
-    RegisterComponent,
-    EmailVerificationComponent,
     HomeComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    NotFoundComponent,
   ],
   imports: [
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
 
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({
-      timeOut: 4500,  // Duration the toast will remain visible
-      positionClass: 'toast-top-right',  // Position on the screen
-      preventDuplicates: false,  // Prevent multiple toasts of the same message
+      timeOut: 4500, // Duration the toast will remain visible
+      positionClass: 'toast-top-right', // Position on the screen
+      preventDuplicates: false, // Prevent multiple toasts of the same message
     }),
     BrowserAnimationsModule,
     FormsModule,
@@ -58,6 +59,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatButtonModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
